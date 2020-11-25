@@ -28,7 +28,7 @@
 - Extrair todos os dados dos usuários
 
 # Tecnologias
-- SQL
+- GraphQL
 - Flutter
 - Html
 - Css
