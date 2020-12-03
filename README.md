@@ -1,4 +1,4 @@
-# app-genicologia
+# Diario da Pomada
 
 # Telas
 - Tela de Informação com rolagem carrossel, explicando como funciona e para que o aplicativo
