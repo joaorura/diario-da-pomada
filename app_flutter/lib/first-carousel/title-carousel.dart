@@ -20,8 +20,9 @@ class _TitleCarousel extends State<TitleCarousel> {
     return Container(
       child: Text(
         this.text,
-        style: GoogleFonts.acme(
+        style: GoogleFonts.notoSans(
             color: Colors.white,
+            fontSize: 35,
             fontWeight: FontWeight.w900,
             shadows: [Shadow(color: Colors.black, blurRadius: 80)],
             decoration: TextDecoration.none),

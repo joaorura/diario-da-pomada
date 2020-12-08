@@ -8,14 +8,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(),
-    );
+    return App(home: MyHomePage());
   }
 }
 
@@ -29,6 +22,33 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: FirstCarousel());
+    return Scaffold(body: SafeArea(top: false, child: FirstCarousel()));
+  }
+}
+
+class App extends StatefulWidget {
+  final Widget home;
+
+  App({Key key, this.home}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _App(this.home);
+}
+
+class _App extends State<App> {
+  final Widget home;
+
+  _App(this.home);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.grey,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: Scaffold(body: SafeArea(top: false, child: this.home)),
+    );
   }
 }

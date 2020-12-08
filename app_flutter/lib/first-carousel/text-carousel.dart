@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TextCarousel extends StatefulWidget {
   final String text;
@@ -19,9 +20,9 @@ class _TextCarousel extends State<TextCarousel> {
     return Container(
         child: Text(
           this.text,
-          style: TextStyle(
+          style: GoogleFonts.notoSans(
               color: Colors.white,
-              fontSize: 30,
+              fontSize: 25,
               shadows: [Shadow(color: Colors.black, blurRadius: 80)],
               decoration: TextDecoration.none),
         ),

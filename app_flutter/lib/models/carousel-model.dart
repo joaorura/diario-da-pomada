@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 
 class CarouselModel {
-  String title;
-  String textCamp;
+  final String title;
+  final String textCamp;
 
-  MemoryImage image;
+  final MemoryImage image;
 
   CarouselModel(this.title, this.textCamp, this.image);
 }
