@@ -22,9 +22,7 @@ class _BasePage extends State<BasePage> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets\\images\\img_0.jpg"),
-              fit: BoxFit.cover),
+          color: Colors.pink.withAlpha(90),
         ),
         child: Form(
             child: Column(

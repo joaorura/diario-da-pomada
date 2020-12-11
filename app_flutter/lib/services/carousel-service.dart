@@ -17,19 +17,17 @@ class CarouselService extends DioService {
     List<CarouselModel> list = new List<CarouselModel>();
 
     list.add(new CarouselModel(
-        "Title 0",
-        "Tdsdadassdasdasdasdasdsadasdqwwqe dsdad 0",
-        await readFileByte("assets\\images\\img_0.jpg")));
+        "", "", await readFileByte("assets\\images\\img_0.png")));
 
     list.add(new CarouselModel(
         "Title 1",
         "Tdsdadassdasdasdasdasdsadasdqwwqe dsdad 1",
-        await readFileByte("assets\\images\\img_1.jpg")));
+        await readFileByte("assets\\images\\img_1.png")));
 
     list.add(new CarouselModel(
         "Title 2",
         "Tdsdadassdasdasdasdasdsadasdqwwqe dsdad 2",
-        await readFileByte("assets\\images\\img_2.jpg")));
+        await readFileByte("assets\\images\\img_2.png")));
     return list;
   }
 }

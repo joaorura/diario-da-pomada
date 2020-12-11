@@ -30,7 +30,16 @@ class _FirstCarouselState extends State<FirstCarousel> {
         future: this._carouselService.getCarouselModel(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return null;
+            return Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.pink),
+                  )
+                ],
+              ),
+            );
           }
 
           List<CarouselModel> listCarouselModel = snapshot.data;
@@ -41,6 +50,7 @@ class _FirstCarouselState extends State<FirstCarousel> {
                   builder: (BuildContext context) {
                     return Container(
                         width: double.infinity,
+                        height: double.infinity,
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: value.image, fit: BoxFit.cover),
@@ -48,10 +58,20 @@ class _FirstCarouselState extends State<FirstCarousel> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            TitleCarousel(text: value.title),
-                            TextCarousel(text: value.textCamp),
-                            ListWhiteDot(
-                                whiteIndex: key, size: snapshot.data.length)
+                            Container(
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              child: TitleCarousel(text: value.title),
+                            ),
+                            Container(
+                              height: MediaQuery.of(context).size.height * 0.5,
+                              child: TextCarousel(text: value.textCamp),
+                            ),
+                            Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
+                                child: ListWhiteDot(
+                                    whiteIndex: key,
+                                    size: snapshot.data.length))
                           ],
                         ));
                   },

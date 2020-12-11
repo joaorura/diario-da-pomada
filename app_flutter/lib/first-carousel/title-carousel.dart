@@ -28,10 +28,7 @@ class _TitleCarousel extends State<TitleCarousel> {
             decoration: TextDecoration.none),
         textAlign: TextAlign.start,
       ),
-      margin: EdgeInsets.only(
-          left: MediaQuery.of(context).size.width * 0.07,
-          top: MediaQuery.of(context).size.height * 0.05,
-          bottom: MediaQuery.of(context).size.height * 0.05),
+      margin: EdgeInsets.only(left: 20, top: 40),
     );
   }
 }

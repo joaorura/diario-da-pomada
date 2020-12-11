@@ -16,7 +16,7 @@ class _LogonLogin extends State<LogonLogin> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100),
         image: DecorationImage(
-            image: AssetImage("assets\\images\\img_1.jpg"), fit: BoxFit.cover),
+            image: AssetImage("assets\\images\\logo.png"), fit: BoxFit.cover),
       ),
     );
   }

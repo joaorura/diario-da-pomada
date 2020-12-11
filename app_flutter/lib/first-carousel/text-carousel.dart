@@ -26,11 +26,8 @@ class _TextCarousel extends State<TextCarousel> {
               shadows: [Shadow(color: Colors.black, blurRadius: 80)],
               decoration: TextDecoration.none),
         ),
-        padding: EdgeInsets.only(
-            left: MediaQuery.of(context).size.width * 0.12,
-            right: MediaQuery.of(context).size.width * 0.05),
         margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.3,
-            bottom: MediaQuery.of(context).size.height * 0.3));
+            left: MediaQuery.of(context).size.width * 0.12,
+            top: MediaQuery.of(context).size.height * 0.12));
   }
 }

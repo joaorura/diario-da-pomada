@@ -19,22 +19,31 @@ class _CampText extends State<CampText> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.6,
-      height: MediaQuery.of(context).size.height * 0.1,
-      margin: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.grey.withAlpha(900),
-        border: Border.all(color: Colors.white, width: 1.5),
-      ),
-      child: TextFormField(
-        onSaved: this.getData,
-        style: GoogleFonts.notoSans(color: Colors.white),
-        decoration: InputDecoration(
-            hintText: this.nameCamp,
-            hintStyle: GoogleFonts.notoSans(color: Colors.white)),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          child: Text(this.nameCamp,
+              style: GoogleFonts.notoSans(color: Colors.white)),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.6,
+          height: MediaQuery.of(context).size.height * 0.1,
+          margin: EdgeInsets.only(top: 20, bottom: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.pink.withAlpha(30),
+            border: Border.all(color: Colors.white, width: 1.5),
+          ),
+          child: TextFormField(
+            onSaved: this.getData,
+            style: GoogleFonts.notoSans(color: Colors.white),
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 10, right: 10)),
+          ),
+        )
+      ],
     );
   }
 }
