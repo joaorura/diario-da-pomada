@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "baseUrl": ".",
+        "allowJs": true,
+        "checkJs": true,
+        "rootDir": "./",
+        "sourceMap": true,
+        "outDir": "./bin",
+        "target": "ES2020",
+        "module": "CommonJS",
+        "skipLibCheck": true,
+        "noImplicitAny": true,
+        "esModuleInterop": true,
+        "types": ["node", "jest"],
+        "noImplicitReturns": true,
+        "noUnusedParameters": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "strictPropertyInitialization": false,
+        "forceConsistentCasingInFileNames": true,
+        "typeRoots": ["node_modules/@types/", "src/@types/"],
+        "paths": {
+            "@Root/*": ["/*"],
+            "@GraphQL/*": ["src/graphql/*"],
+            "@Modules/*": ["src/modules/*"],
+            "@Database/*": ["src/database/*"],
+            "@Models/*": ["src/database/models/*"],
+            "@Modules/modules": ["src/modules/general/modules.ts"],
+            "@Database/database": ["src/database/general/database.ts"]
+        }
+    },
+    "exclude": ["node_modules/", ".vscode/", ".git/"]
+}
