@@ -1,0 +1,9 @@
+type IntroCarousel {
+    id: Int!
+    header: String!
+    imagePath: String!
+    imagePosition: Int!
+    description: String!
+    createdAt: String!
+    updatedAt: String!
+}

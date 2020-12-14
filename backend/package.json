@@ -18,7 +18,7 @@
         "dev": "yarn run server NODE_ENV=development",
         "prod": " yarn run server NODE_ENV=production",
         "test": "jest --detectOpenHandles --forceExit --config jest.json",
-        "server": "ts-node-dev --transpile-only --ignore-watch node_modules -r tsconfig-paths/register src/www.ts"
+        "server": "ts-node-dev --transpile-only --ignore-watch node_modules -r tsconfig-paths/register -r dotenv/config src/www.ts"
     },
     "husky": {
         "hooks": {
@@ -40,12 +40,14 @@
         "typescript": "^4.0.5"
     },
     "devDependencies": {
+        "@types/dotenv": "^8.2.0",
         "@types/jest": "^26.0.15",
         "@types/morgan": "^1.9.2",
         "@types/supertest": "^2.0.10",
         "@typescript-eslint/eslint-plugin": "^4.7.0",
         "@typescript-eslint/parser": "^4.7.0",
         "cz-conventional-changelog": "3.3.0",
+        "dotenv": "^8.2.0",
         "eslint": "^7.13.0",
         "eslint-config-prettier": "^6.15.0",
         "eslint-plugin-no-loops": "^0.3.0",

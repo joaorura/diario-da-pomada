@@ -4,3 +4,4 @@ knexfile.ts
 yarn.lock
 .vscode/
 .git/
+.env
