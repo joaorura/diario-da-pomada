@@ -1,3 +1,4 @@
+import 'package:app_flutter/default-page/default-page.dart';
 import 'package:app_flutter/login-page/base-page.dart';
 import 'package:app_flutter/login-page/button-camp.dart';
 import 'package:app_flutter/login-page/camp-text.dart';
@@ -21,6 +22,7 @@ class _LoginPage extends State<LoginPage> {
   void sendForm() {
     LoginModel loginModel = new LoginModel(login, password);
     loginService.login(loginModel);
+    goPageWithoutBack(context, () => DefaultPage())();
   }
 
   @override

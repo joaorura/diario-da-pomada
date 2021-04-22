@@ -1,5 +1,6 @@
 import 'package:app_flutter/first-carousel/first-carousel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(MyApp());
@@ -8,7 +9,11 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return App(home: MyHomePage());
+    return MaterialApp(localizationsDelegates: [
+      GlobalMaterialLocalizations.delegate,
+    ], supportedLocales: [
+      const Locale('pt', 'BR')
+    ], home: MyHomePage());
   }
 }
 
