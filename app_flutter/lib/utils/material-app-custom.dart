@@ -15,8 +15,8 @@ class MaterialAppCustom extends StatelessWidget {
         primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Scaffold(
-          body: SafeArea(top: true, bottom: false, child: this._child)),
+      home:
+          Scaffold(body: SafeArea(top: true, bottom: true, child: this._child)),
     );
   }
 }

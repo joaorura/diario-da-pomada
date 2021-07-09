@@ -14,19 +14,19 @@ Future<MemoryImage> readFileByte(String filePath) async {
 
 class CarouselService extends DioService {
   Future<List<CarouselModel>> getCarouselModel() async {
-    List<CarouselModel> list = new List<CarouselModel>();
+    List<CarouselModel> list = [];
 
     list.add(new CarouselModel(
         "", "", await readFileByte("assets\\images\\img_0.png")));
 
     list.add(new CarouselModel(
-        "Title 1",
-        "Tdsdadassdasdasdasdasdsadasdqwwqe dsdad 1",
+        "Cuidando de você todos os dias!",
+        "Você é importante e merece cuidado.",
         await readFileByte("assets\\images\\img_1.png")));
 
     list.add(new CarouselModel(
-        "Title 2",
-        "Tdsdadassdasdasdasdasdsadasdqwwqe dsdad 2",
+        "Cuide-se",
+        "A nossa saúde é um dos nossos maiores bens.",
         await readFileByte("assets\\images\\img_2.png")));
     return list;
   }

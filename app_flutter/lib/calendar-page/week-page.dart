@@ -10,9 +10,8 @@ class WeekPage extends StatefulWidget {
 }
 
 class _WeekPage extends State<WeekPage> {
-  List<QuestionModel> _listQuestions = new List<QuestionModel>(10);
-  List<TextEditingController> _otherValues = List<TextEditingController>(6);
-  List<int> _listInt = [2, 3];
+  List<QuestionModel> _listQuestions = []..length = 10;
+  List<TextEditingController> _otherValues = []..length = 6;
 
   _WeekPage() {
     for (int i = 0; i < 10; i++) {

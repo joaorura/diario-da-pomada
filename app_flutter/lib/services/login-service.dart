@@ -5,4 +5,8 @@ class LoginService extends DioService {
   void login(LoginModel login) {
     print("Enviado Login");
   }
+
+  bool loged() {
+    return true;
+  }
 }

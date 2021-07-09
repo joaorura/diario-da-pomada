@@ -77,5 +77,3 @@ class _AccompanimentPage extends State<AccompanimentPage> {
         crossAxisAlignment: CrossAxisAlignment.center);
   }
 }
-
-class Croos {}

@@ -1,5 +1,8 @@
 import 'package:app_flutter/calendar-page/accompaniment-page.dart';
 import 'package:app_flutter/calendar-page/week-page.dart';
+import 'package:app_flutter/models/calendar-model.dart';
+import 'package:app_flutter/services/calendar-service.dart';
+import 'package:app_flutter/services/notification-service.dart';
 import 'package:app_flutter/utils/material-app-custom.dart';
 import 'package:app_flutter/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,37 +11,30 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
+  final NotificationService notificationService;
+  CalendarPage(this.notificationService, {Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _CalendarPage();
 }
 
 class _CalendarPage extends State<CalendarPage> {
+  CalendarService _calendarService = CalendarService();
+
   CalendarController _calendarController;
-  Map<DateTime, List<String>> _events = Map<DateTime, List<String>>();
-  Map<DateTime, List<String>> _holidays = Map<DateTime, List<String>>();
+  CalendarModel _calendarModel;
 
   @override
   void initState() {
     super.initState();
     _calendarController = CalendarController();
+    _calendarModel = _calendarService.getCalendar();
   }
 
   @override
   void dispose() {
     _calendarController.dispose();
     super.dispose();
-  }
-
-  Map<DateTime, List<String>> _createEvents() {
-    return {
-      DateTime(2021, 3, 12): ['semanal']
-    };
-  }
-
-  Map<DateTime, List<String>> _createHolidays() {
-    return {
-      DateTime(2021, 3, 11): ['acompanhamento']
-    };
   }
 
   void _onDaySelected(DateTime day, List events, List holidays) {
@@ -80,8 +76,8 @@ class _CalendarPage extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return (Container(
         child: TableCalendar(
-      events: _events,
-      holidays: _holidays,
+      events: _calendarModel.events,
+      holidays: _calendarModel.holidays,
       weekendDays: [],
       calendarStyle: CalendarStyle(
           selectedColor: Colors.pink[400],

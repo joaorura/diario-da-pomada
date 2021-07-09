@@ -1,15 +1,28 @@
 import 'package:app_flutter/calendar-page/calendar-page.dart';
+import 'package:app_flutter/configuration-page/configuration-page.dart';
+import 'package:app_flutter/informations-page/informations-page.dart';
+import 'package:app_flutter/services/notification-service.dart';
+import 'package:app_flutter/use-page/use-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DefaultPage extends StatefulWidget {
+  final NotificationService notificationService;
+  DefaultPage(this.notificationService, {Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _DefaultPage();
 }
 
 class _DefaultPage extends State<DefaultPage> {
-  Widget bodyChild = CalendarPage();
-  int _selectedIndex = 2;
+  Widget bodyChild;
+  int _selectedIndex = 1;
+
+  void initState() {
+    super.initState();
+    this.bodyChild = CalendarPage(widget.notificationService);
+    this._selectedIndex = 1;
+  }
 
   void _onItemTapped(int index) {
     if (this._selectedIndex == index) {
@@ -20,18 +33,27 @@ class _DefaultPage extends State<DefaultPage> {
       this._selectedIndex = index;
     });
     switch (index) {
-      case 2:
+      case 0:
         this.setState(() {
-          this.bodyChild = CalendarPage();
+          this.bodyChild = UsePage();
         });
         break;
-
-      default:
+      case 1:
         this.setState(() {
-          this.bodyChild = Container(
-            child: Text("a"),
-          );
+          this.bodyChild = CalendarPage(widget.notificationService);
         });
+        break;
+      case 2:
+        this.setState(() {
+          this.bodyChild = InformationsPage();
+        });
+        break;
+      case 3:
+        this.setState(() {
+          this.bodyChild = ConfigurationPage(widget.notificationService);
+        });
+        break;
+      default:
         break;
     }
   }
@@ -46,10 +68,6 @@ class _DefaultPage extends State<DefaultPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.business, color: Colors.pink),
             label: 'Uso',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_rounded, color: Colors.pink),
-            label: 'Estatítisticas',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today_rounded, color: Colors.pink),
