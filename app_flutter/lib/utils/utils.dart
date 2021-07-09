@@ -13,3 +13,14 @@ Function goPageWithoutBack(BuildContext context, Function createWidget) {
                 )));
   };
 }
+
+Function goPageWithBack(BuildContext context, Function createWidget) {
+  return () {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => App(
+                  home: createWidget(),
+                )));
+  };
+}

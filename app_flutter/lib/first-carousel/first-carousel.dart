@@ -3,12 +3,16 @@ import 'package:app_flutter/first-carousel/title-carousel.dart';
 import 'package:app_flutter/login-page/login-page.dart';
 import 'package:app_flutter/models/carousel-model.dart';
 import 'package:app_flutter/services/carousel-service.dart';
+import 'package:app_flutter/services/notification-service.dart';
 import 'package:app_flutter/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:app_flutter/first-carousel/list-white-dot.dart';
 
 class FirstCarousel extends StatefulWidget {
+  final NotificationService notificationService;
+  FirstCarousel(this.notificationService, {Key key}) : super(key: key);
+
   @override
   _FirstCarouselState createState() => _FirstCarouselState();
 }
@@ -19,7 +23,8 @@ class _FirstCarouselState extends State<FirstCarousel> {
   Function checkIndex(int size) {
     return (int index, CarouselPageChangedReason reason) {
       if (index == size) {
-        goPageWithoutBack(context, () => LoginPage())();
+        goPageWithoutBack(
+            context, () => LoginPage(widget.notificationService))();
       }
     };
   }
