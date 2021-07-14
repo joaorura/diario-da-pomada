@@ -2,7 +2,6 @@ import 'package:app_flutter/first-carousel/first-carousel.dart';
 import 'package:app_flutter/services/login-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -36,8 +35,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }

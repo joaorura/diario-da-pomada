@@ -26,7 +26,8 @@ dependencies:
   
   flutter_localizations:
     sdk: flutter
-  
+    
+  localstore: ^1.2.0
   flutter_native_timezone: ^2.0.0
   carousel_slider: ^2.3.1
   table_calendar: ^2.3.3

@@ -1,10 +1,13 @@
+import 'package:app_flutter/main.dart';
 import 'package:app_flutter/models/notification-model.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
   FlutterLocalNotificationsPlugin fltrNotification;
 
-  Future _notificationSelected(String payload) async {}
+  Future _notificationSelected(String payload) async {
+    return new MyHomePage();
+  }
 
   NotificationService() {
     var androidInitilize = new AndroidInitializationSettings('ic_launcher');
@@ -17,7 +20,7 @@ class NotificationService {
         onSelectNotification: _notificationSelected);
   }
 
-  Future scheduleNotification(
+  void scheduleNotification(
       NotificationModel notifications, DateTime scheduledTime) async {
     var androidDetails = new AndroidNotificationDetails(
         "Channel ID", "Desi programmer", "This is my channel",

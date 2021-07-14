@@ -20,10 +20,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
-  final LoginService loginService = new LoginService();
   String login, password;
 
   void sendForm() {
+    LoginService loginService = new LoginService();
     LoginModel loginModel = new LoginModel(login, password);
     loginService.login(loginModel);
     goPageWithoutBack(context, () => DefaultPage(widget.notificationService))();
