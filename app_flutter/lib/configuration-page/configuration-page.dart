@@ -1,5 +1,4 @@
 import 'package:app_flutter/login-page/login-page.dart';
-import 'package:app_flutter/main.dart';
 import 'package:app_flutter/notifications-page/notifications-page.dart';
 import 'package:app_flutter/services/login-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
