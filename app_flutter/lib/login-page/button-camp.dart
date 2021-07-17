@@ -28,7 +28,7 @@ class _ButtonCamp extends State<ButtonCamp> {
         onPressed: this.onPressed,
         child: Text(
           this.theText,
-          style: GoogleFonts.notoSans(),
+          style: GoogleFonts.notoSans(color: Colors.pink),
         ),
       ),
     );

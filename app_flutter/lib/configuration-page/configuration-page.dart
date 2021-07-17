@@ -1,4 +1,7 @@
+import 'package:app_flutter/login-page/login-page.dart';
+import 'package:app_flutter/main.dart';
 import 'package:app_flutter/notifications-page/notifications-page.dart';
+import 'package:app_flutter/services/login-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
 import 'package:app_flutter/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,8 +11,13 @@ class ConfigurationPage extends StatelessWidget {
   final NotificationService notificationService;
   ConfigurationPage(this.notificationService, {Key key}) : super(key: key);
 
-  void logoff() {
-    return;
+  Function logoff(BuildContext context) {
+    return () {
+      LoginService loginService = new LoginService();
+      loginService.logOff();
+
+      goPageWithoutBack(context, () => LoginPage(notificationService))();
+    };
   }
 
   @override
@@ -24,7 +32,7 @@ class ConfigurationPage extends StatelessWidget {
           TextButton(
               child: Text("Editar Perfil"),
               onPressed: goPageWithBack(context, () => Container())),
-          TextButton(child: Text("Sair da Conta"), onPressed: logoff)
+          TextButton(child: Text("Sair da Conta"), onPressed: logoff(context))
         ],
       ),
     );

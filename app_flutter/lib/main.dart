@@ -4,6 +4,7 @@ import 'package:app_flutter/services/notification-service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -15,11 +16,12 @@ Future<void> _configureLocalTimeZone() async {
   tz.setLocalLocation(tz.getLocation(timeZoneName));
 }
 
+SharedPreferences prefs;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await _configureLocalTimeZone();
-
+  prefs = await SharedPreferences.getInstance();
   runApp(MyApp());
 }
 
@@ -50,14 +52,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     LoginService loginService = new LoginService();
-
     if (loginService.loged()) {
-      return Scaffold(
-          body: SafeArea(top: false, child: DefaultPage(notificationService)));
+      return App(home: DefaultPage(notificationService));
     } else {
-      return Scaffold(
-          body:
-              SafeArea(top: false, child: FirstCarousel(notificationService)));
+      return App(home: FirstCarousel(notificationService));
     }
   }
 }
@@ -79,7 +77,7 @@ class _App extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'App Pomada',
       theme: ThemeData(
         primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,

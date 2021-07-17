@@ -24,3 +24,11 @@ Function goPageWithBack(BuildContext context, Function createWidget) {
                 )));
   };
 }
+
+void showSnackBar(BuildContext context, String text) {
+  final snackBar = SnackBar(
+    content: Text(text),
+    duration: Duration(seconds: 5), //default is 4s
+  );
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}

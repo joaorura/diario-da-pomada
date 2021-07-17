@@ -24,10 +24,8 @@ class _BasePage extends State<BasePage> {
         decoration: BoxDecoration(
           color: Colors.pink.withAlpha(90),
         ),
-        child: Form(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: this.children)),
+        child:
+            Form(child: ListView(children: [Column(children: this.children)])),
       ),
     );
   }
