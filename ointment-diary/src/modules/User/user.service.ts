@@ -1,4 +1,5 @@
 import { Injectable, InternalServerErrorException, UnprocessableEntityException } from '@nestjs/common';
+import { CalendaryService } from '../Calendary/calendary.service';
 import { CreateUser, UpdateUser } from './user.dto';
 import { User, UserDocument } from './user.entity';
 import { InjectModel } from '@nestjs/mongoose';
@@ -6,35 +7,45 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+    constructor(
+        @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+        private readonly calendaryService: CalendaryService,
+    ) {}
 
-    async create(body: CreateUser) {
-        return await this.userModel.create(body).catch((e) => {
+    create(body: CreateUser) {
+        return this.userModel
+            .create(body)
+            .then(async (response) => {
+                await this.calendaryService.create(response.id, { currentDate: response.createdAt });
+                return response;
+            })
+            .catch((e) => {
+                throw new UnprocessableEntityException(e.message);
+            });
+    }
+
+    updateById(body: UpdateUser) {
+        return this.userModel.findByIdAndUpdate(body.id, body, { new: true }).catch((e) => {
             throw new UnprocessableEntityException(e.message);
         });
     }
 
-    async updateById(body: UpdateUser) {
-        return await this.userModel.findByIdAndUpdate(body.id, body, { new: true }).catch((e) => {
-            throw new UnprocessableEntityException(e.message);
-        });
-    }
-
-    async removeById(id: string) {
-        return await this.userModel.findByIdAndDelete(id).catch((e) => {
+    removeById(id: string) {
+        return this.userModel.findByIdAndDelete(id).catch((e) => {
             throw new InternalServerErrorException(e.message);
         });
     }
 
-    async findOneByUsername(username: string) {
+    findByUsername(username: string) {
         const or = [{ email: username }, { healthCard: username }, { nationalCard: username }];
-        return await this.userModel.findOne({ $or: or }).catch((e) => {
+        return this.userModel.findOne({ $or: or }).catch((e) => {
             throw new InternalServerErrorException(e.message);
         });
     }
 
     async validate(username: string, password: string): Promise<User | null> {
-        const user: any = await this.findOneByUsername(username);
-        return (await user?.comparePassword(password)) ? user : null;
+        const user = (await this.findByUsername(username)) as any;
+        const isValid = await user?.comparePassword(password);
+        return isValid ? user : null;
     }
 }

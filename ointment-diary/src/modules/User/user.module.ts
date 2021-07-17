@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { User, UserSchema } from './user.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserController } from './user.controller';
+import { CalendaryModule } from '../Calendary/calendary.module';
 
 const UserFeature = {
     name: User.name,
@@ -13,6 +14,6 @@ const UserFeature = {
     exports: [UserService],
     providers: [UserService],
     controllers: [UserController],
-    imports: [MongooseModule.forFeature([UserFeature])],
+    imports: [MongooseModule.forFeature([UserFeature]), CalendaryModule],
 })
 export class UserModule {}

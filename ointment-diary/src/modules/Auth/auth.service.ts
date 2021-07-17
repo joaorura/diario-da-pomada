@@ -7,9 +7,9 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-    constructor(private userService: UserService, private jwtService: JwtService) {}
+    constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
 
-    async validate(username: string, password: string) {
+    validate(username: string, password: string) {
         return this.userService.validate(username, password);
     }
 
@@ -17,12 +17,16 @@ export class AuthService {
         return { access_token: this.jwtService.sign(payload) };
     }
 
-    async signin(user: User) {
+    signin(user: User) {
         return this.createNewAccessToken({ username: user.email, sub: user._id });
     }
 
     async signup(body: CreateUser) {
         const user = await this.userService.create(body);
         return this.createNewAccessToken({ username: user.email, sub: user._id });
+    }
+
+    findUserByUsername(username: string) {
+        return this.userService.findByUsername(username);
     }
 }

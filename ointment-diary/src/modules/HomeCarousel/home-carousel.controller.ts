@@ -21,12 +21,12 @@ export class HomeCarouselController {
     }
 
     @Patch()
-    async update(@Body() body: UpdateHomeCarousel) {
-        return await this.homeCarouselService.update(body);
+    async updateById(@Body() body: UpdateHomeCarousel) {
+        return await this.homeCarouselService.updateById(body);
     }
 
     @Delete()
-    async remove(@Body() body: DatabaseQuery) {
-        return await this.homeCarouselService.removeOne(body.id);
+    async removeById(@Body() body: DatabaseQuery) {
+        return await this.homeCarouselService.removeById(body.id);
     }
 }

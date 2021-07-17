@@ -12,12 +12,12 @@ export class AuthController {
     @Post('signin')
     @UseGuards(LocalAuthGuard)
     async signin(@Request() request) {
-        return this.authService.signin(request.user);
+        return await this.authService.signin(request.user);
     }
 
     @Public()
     @Post('signup')
     async signup(@Body() body: CreateUser) {
-        return this.authService.signup(body);
+        return await this.authService.signup(body);
     }
 }

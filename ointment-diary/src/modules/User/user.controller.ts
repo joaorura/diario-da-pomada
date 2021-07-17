@@ -8,12 +8,12 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Patch()
-    async update(@Body() body: UpdateUser) {
+    async updateById(@Body() body: UpdateUser) {
         return await this.userService.updateById(body);
     }
 
     @Delete()
-    async remove(@Body() body: DatabaseQuery) {
+    async removeById(@Body() body: DatabaseQuery) {
         return await this.userService.removeById(body.id);
     }
 }
