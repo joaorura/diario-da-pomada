@@ -1,4 +1,4 @@
-import 'package:app_flutter/calendar-page/accompaniment-page.dart';
+import 'package:app_flutter/calendar-page/daily-page.dart';
 import 'package:app_flutter/calendar-page/week-page.dart';
 import 'package:app_flutter/models/calendar-model.dart';
 import 'package:app_flutter/services/calendar-service.dart';
@@ -15,21 +15,11 @@ class CalendarPage extends StatefulWidget {
   CalendarPage(this.notificationService, {Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CalendarPage();
+  State<StatefulWidget> createState() => _CalendarPageState();
 }
 
-class _CalendarPage extends State<CalendarPage> {
-  CalendarService _calendarService = CalendarService();
-
-  CalendarController _calendarController;
-  CalendarModel _calendarModel;
-
-  @override
-  void initState() {
-    super.initState();
-    _calendarController = CalendarController();
-    _calendarModel = _calendarService.getCalendar();
-  }
+class _CalendarPageState extends State<CalendarPage> {
+  CalendarController _calendarController = CalendarController();
 
   @override
   void dispose() {
@@ -58,13 +48,17 @@ class _CalendarPage extends State<CalendarPage> {
 
     switch (typeDay) {
       case 'acompanhamento':
-        goPageWithBack(context,
-            () => MaterialAppCustom(AccompanimentPage(), 'Acompanhamento'))();
+        goPageWithBack(
+            context,
+            () => MaterialAppCustom(
+                DailyPage(widget.notificationService), 'Acompanhamento'))();
         break;
 
       case 'semanal':
         goPageWithBack(
-            context, () => MaterialAppCustom(WeekPage(), 'Semanal'))();
+            context,
+            () => MaterialAppCustom(
+                WeekPage(widget.notificationService), 'Semanal'))();
         break;
 
       default:
@@ -72,12 +66,14 @@ class _CalendarPage extends State<CalendarPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return (Container(
-        child: TableCalendar(
-      events: _calendarModel.events,
-      holidays: _calendarModel.holidays,
+  Widget buildFuture(BuildContext context, AsyncSnapshot<CalendarModel> data) {
+    if (data.data.erro) {
+      showSnackBar(context, "Erro de conexão.");
+    }
+
+    return TableCalendar(
+      events: data.data.events,
+      holidays: data.data.holidays,
       weekendDays: [],
       calendarStyle: CalendarStyle(
           selectedColor: Colors.pink[400],
@@ -109,6 +105,17 @@ class _CalendarPage extends State<CalendarPage> {
         CalendarFormat.week: '2 Semanas'
       },
       onDaySelected: _onDaySelected,
-    )));
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    CalendarService calendarService = CalendarService();
+    Future<CalendarModel> futureCalendarModel = calendarService.getCalendar(
+        notificationService: widget.notificationService);
+    return FutureBuilder(
+        future: futureCalendarModel,
+        initialData: CalendarModel(null, null, false),
+        builder: buildFuture);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:app_flutter/login-page/login-page.dart';
+import 'package:app_flutter/login-page/sigup-page.dart';
 import 'package:app_flutter/notifications-page/notifications-page.dart';
 import 'package:app_flutter/services/login-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
@@ -30,7 +31,8 @@ class ConfigurationPage extends StatelessWidget {
                   context, () => NotificacoesPage(notificationService))),
           TextButton(
               child: Text("Editar Perfil"),
-              onPressed: goPageWithBack(context, () => Container())),
+              onPressed: goPageWithBack(
+                  context, () => SignupPage(notificationService, edit: true))),
           TextButton(child: Text("Sair da Conta"), onPressed: logoff(context))
         ],
       ),

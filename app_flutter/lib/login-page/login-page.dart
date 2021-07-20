@@ -14,28 +14,46 @@ import 'package:flutter/services.dart';
 
 class LoginPage extends StatefulWidget {
   final NotificationService notificationService;
-  LoginPage(this.notificationService, {Key key}) : super(key: key);
+  final LoginModel loginModel;
+
+  LoginPage(this.notificationService, {Key key, this.loginModel})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoginPage();
 }
 
 class _LoginPage extends State<LoginPage> {
-  String email, password;
-  final _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  LoginModel _loginModel;
 
   void sendForm() async {
     if (_formKey.currentState.validate()) {
       LoginService loginService = new LoginService();
-      LoginModel loginModel = new LoginModel(email, password);
-
-      if (await loginService.login(loginModel)) {
+      if (await loginService.login(_loginModel, widget.notificationService)) {
         goPageWithoutBack(
             context, () => DefaultPage(widget.notificationService))();
       } else {
         showSnackBar(context, "Erro ao realizar login.");
       }
     }
+  }
+
+  void initState() {
+    if (widget.loginModel == null) {
+      _loginModel = LoginModel();
+      _loginModel.obscure = true;
+    } else {
+      _loginModel = widget.loginModel;
+    }
+
+    super.initState();
+  }
+
+  void _toggle() {
+    _loginModel.obscure = !_loginModel.obscure;
+    goPageWithoutBack(context,
+        () => LoginPage(widget.notificationService, loginModel: _loginModel))();
   }
 
   @override
@@ -52,7 +70,7 @@ class _LoginPage extends State<LoginPage> {
             CampText(
               "Email",
               (String email) {
-                this.email = email;
+                _loginModel.email = email;
               },
               inputs: [new LengthLimitingTextInputFormatter(128)],
               validate: (value) {
@@ -64,20 +82,37 @@ class _LoginPage extends State<LoginPage> {
                   return 'Email não nos conformes.';
                 }
               },
+              dataCamp: _loginModel.email,
             ),
-            CampText(
-              "Senha",
-              (String password) => this.password = password,
-              inputs: [new LengthLimitingTextInputFormatter(128)],
-              validate: (value) {
-                if (RegExp(
-                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                    .hasMatch(value)) {
-                  return null;
-                } else {
-                  return 'Senha não nos conformes.';
-                }
-              },
+            Container(
+              child: Column(
+                children: [
+                  CampText(
+                    "Senha",
+                    (String password) => _loginModel.password = password,
+                    inputs: [new LengthLimitingTextInputFormatter(128)],
+                    validate: (value) {
+                      if (RegExp(
+                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                          .hasMatch(value)) {
+                        return null;
+                      } else {
+                        return 'Senha não nos conformes.';
+                      }
+                    },
+                    dataCamp: _loginModel.password,
+                    icon: Padding(
+                        padding: const EdgeInsets.only(top: 15.0),
+                        child: const Icon(Icons.lock)),
+                    obcure: _loginModel.obscure,
+                  ),
+                  TextButton(
+                      onPressed: _toggle,
+                      child: new Text(
+                          _loginModel.obscure ? "Exibir" : "Esconder",
+                          style: TextStyle(color: Colors.white)))
+                ],
+              ),
             ),
             Container(
                 width: MediaQuery.of(context).size.width,

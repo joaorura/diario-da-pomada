@@ -19,4 +19,12 @@ class SignupModel {
         "healthCard": heathCard,
         "nationalCard": nationalCard
       };
+
+  SignupModel.fromJson(Map<String, dynamic> json)
+      : email = json['email'],
+        birthDate = DateTime.parse(json['birthData']),
+        fullName = json['fullName'],
+        password = json['password'],
+        heathCard = json['healthCard'],
+        nationalCard = json['nationalCard'];
 }

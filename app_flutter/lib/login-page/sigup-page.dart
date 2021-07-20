@@ -1,11 +1,12 @@
-import 'package:app_flutter/default-page/default-page.dart';
+import 'package:app_flutter/calendar-page/calendar-page.dart';
+import 'package:app_flutter/configuration-page/configuration-page.dart';
 import 'package:app_flutter/login-page/base-page.dart';
 import 'package:app_flutter/login-page/button-camp.dart';
 import 'package:app_flutter/login-page/camp-text.dart';
 import 'package:app_flutter/login-page/logo-login.dart';
 import 'package:app_flutter/models/signup-model.dart';
 import 'package:app_flutter/services/notification-service.dart';
-import 'package:app_flutter/services/sigin-service.dart';
+import 'package:app_flutter/services/signup-service.dart';
 import 'package:app_flutter/utils/utils.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,19 +19,19 @@ import 'login-page.dart';
 class SignupPage extends StatefulWidget {
   final NotificationService notificationService;
   final SignupModel previousData;
+  final bool edit;
 
-  SignupPage(this.notificationService, {Key key, this.previousData})
+  SignupPage(this.notificationService, {Key key, this.previousData, this.edit})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SignupPage();
+  State<StatefulWidget> createState() => _SignupPageState();
 }
 
-class _SignupPage extends State<SignupPage> {
-  final Pattern patternPassword =
-      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-
+class _SignupPageState extends State<SignupPage> {
   SignupModel _data;
+  String _secondPassword;
+  bool _edit;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -40,6 +41,7 @@ class _SignupPage extends State<SignupPage> {
     } else {
       _data = widget.previousData;
     }
+    _edit = widget.edit != null && widget.edit;
 
     super.initState();
   }
@@ -59,27 +61,52 @@ class _SignupPage extends State<SignupPage> {
 
   void sendForm() async {
     if (_formKey.currentState.validate()) {
-      SiginService service = new SiginService();
-      if (await service.signUp(_data)) {
+      SignupService service = new SignupService();
+      if (_edit) {
+        if (await service.attUser(_data)) {
+          showSnackBar(context, "Falha ao atualizar o cadastro.");
+        } else {
+          showSnackBar(context, "Cadastro atualizado.");
+        }
+
         goPageWithoutBack(
-            context, () => DefaultPage(widget.notificationService))();
+            context, () => ConfigurationPage(widget.notificationService))();
       } else {
-        showSnackBar(context, "Falha ao realizar o cadastro!");
+        if (await service.signUp(_data)) {
+          goPageWithoutBack(
+              context, () => CalendarPage(widget.notificationService))();
+        } else {
+          showSnackBar(context, "Falha ao realizar o cadastro.");
+        }
       }
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget buildFuture(BuildContext context) {
+    Widget editText;
+
+    if (_edit) {
+      editText = Container(
+          padding: EdgeInsetsDirectional.only(bottom: 30),
+          child: Text("Atualizando Cadastro",
+              style: GoogleFonts.notoSans(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold)));
+    } else {
+      editText = Container();
+    }
+
     return BasePage(children: [
       LogonLogin(),
       Form(
           key: _formKey,
-          autovalidateMode: AutovalidateMode.always,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: () {
             Form.of(primaryFocus.context).save();
           },
           child: Column(children: [
+            editText,
             CampText(
               "Email",
               (String email) {
@@ -134,12 +161,35 @@ class _SignupPage extends State<SignupPage> {
                 if (RegExp(
                         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
                     .hasMatch(value)) {
+                  if (_data.password != _secondPassword) {
+                    return "Senhas digitadas não são iguais.";
+                  }
                   return null;
                 } else {
                   return 'Senha não nos conformes.';
                 }
               },
               dataCamp: _data.password,
+              obcure: true,
+            ),
+            CampText(
+              "Repita a senha",
+              (String password) => _secondPassword = password,
+              inputs: [new LengthLimitingTextInputFormatter(128)],
+              validate: (value) {
+                if (RegExp(
+                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                    .hasMatch(value)) {
+                  if (_data.password != _secondPassword) {
+                    return "Senhas digitadas não são iguais.";
+                  }
+                  return null;
+                } else {
+                  return 'Senha não nos conformes.';
+                }
+              },
+              dataCamp: _data.password,
+              obcure: true,
             ),
             CampText(
               "Cartão do SUS",
@@ -179,5 +229,30 @@ class _SignupPage extends State<SignupPage> {
             ],
           )),
     ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_edit) {
+      SignupService service = new SignupService();
+
+      return FutureBuilder(
+          future: service.getUser(),
+          builder: (context, data) {
+            if (data.hasData) {
+              if (data.data == null) {
+                showSnackBar(context, "Error ao carregar dados do usuário.");
+                goPageWithoutBack(
+                    context, () => CalendarPage(widget.notificationService))();
+              }
+              this._data = data.data;
+              return buildFuture(context);
+            } else {
+              return Container();
+            }
+          });
+    } else {
+      return buildFuture(context);
+    }
   }
 }

@@ -1,5 +1,9 @@
 import 'package:app_flutter/main.dart';
+import 'package:app_flutter/models/calendar-model.dart';
 import 'package:app_flutter/models/notification-model.dart';
+import 'package:app_flutter/services/calendar-service.dart';
+import 'package:app_flutter/services/storage-service.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
@@ -23,7 +27,7 @@ class NotificationService {
   void scheduleNotification(
       NotificationModel notifications, DateTime scheduledTime) async {
     var androidDetails = new AndroidNotificationDetails(
-        "Channel ID", "Desi programmer", "This is my channel",
+        "Diário da Pomada", "Diário da Pomada", "Diário da Pomada",
         importance: Importance.high);
     var iSODetails = new IOSNotificationDetails();
     var generalNotificationDetails =
@@ -35,5 +39,45 @@ class NotificationService {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.wallClockTime);
+  }
+
+  int _mapNotifications(Map<DateTime, List<String>> mapData, String tipo,
+      TimeOfDay timeNotification, int id) {
+    for (var item in mapData.entries) {
+      DateTime date = item.key;
+      date.add(Duration(
+          hours: timeNotification.hour, minutes: timeNotification.minute));
+
+      scheduleNotification(
+          NotificationModel(
+              id: id,
+              title: "Hora de realizar seu questionário!",
+              body: "O questionário $tipo do dia: ${item.value}"),
+          date);
+      id += 1;
+    }
+
+    return id;
+  }
+
+  void attNotifications(
+      {CalendarModel calendarModel, TimeOfDay timeNotification}) async {
+    await fltrNotification.cancelAll();
+
+    StorageService storageService = new StorageService();
+
+    if (timeNotification == null) {
+      timeNotification = storageService.getTimeNotification();
+    }
+
+    if (calendarModel == null) {
+      CalendarService calendarService = new CalendarService();
+
+      calendarModel = await calendarService.getCalendar();
+    }
+
+    int id =
+        _mapNotifications(calendarModel.events, "diário", timeNotification, 1);
+    _mapNotifications(calendarModel.holidays, "semanal", timeNotification, id);
   }
 }

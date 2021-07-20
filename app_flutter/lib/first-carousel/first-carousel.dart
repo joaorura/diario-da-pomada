@@ -107,7 +107,8 @@ class _FirstCarouselState extends State<FirstCarousel> {
                       height: MediaQuery.of(context).size.height * 0.2,
                       child: ListWhiteDot(whiteIndex: 2, size: 3))
                 ],
-              ))
+              )),
+          Container()
         ]);
   }
 }

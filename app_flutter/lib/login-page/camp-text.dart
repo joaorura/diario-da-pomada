@@ -38,9 +38,16 @@ class CampText extends StatefulWidget {
   final List<TextInputFormatter> inputs;
   final String Function(String) validate;
   final String dataCamp;
+  final Widget icon;
+  final bool obcure;
 
   CampText(this.nameCamp, this.getData,
-      {Key key, this.inputs, this.validate, this.dataCamp})
+      {Key key,
+      this.inputs,
+      this.validate,
+      this.dataCamp,
+      this.icon,
+      this.obcure})
       : super(key: key);
 
   @override
@@ -50,11 +57,18 @@ class CampText extends StatefulWidget {
 class _CampText extends State<CampText> {
   String Function(String) validate;
   TextEditingController _controller;
+  bool _obscure;
 
   @override
   void initState() {
-    super.initState();
+    if (widget.obcure == null) {
+      _obscure = false;
+    } else {
+      _obscure = widget.obcure;
+    }
+
     _controller = new TextEditingController(text: widget.dataCamp);
+    super.initState();
   }
 
   @override
@@ -83,7 +97,9 @@ class _CampText extends State<CampText> {
             style: GoogleFonts.notoSans(color: Colors.white),
             decoration: InputDecoration(
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 10, right: 10)),
+                contentPadding: EdgeInsets.only(left: 10, right: 10),
+                icon: widget.icon),
+            obscureText: _obscure,
           ),
         )
       ],

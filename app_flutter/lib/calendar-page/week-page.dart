@@ -1,605 +1,780 @@
-import 'package:app_flutter/models/question-model.dart';
+import 'package:app_flutter/calendar-page/calendar-page.dart';
+import 'package:app_flutter/models/week-question-model.dart';
+import 'package:app_flutter/services/notification-service.dart';
+import 'package:app_flutter/services/week-question-service.dart';
+import 'package:app_flutter/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:date_field/date_field.dart';
 
 class WeekPage extends StatefulWidget {
+  final NotificationService notificationService;
+
+  WeekPage(this.notificationService, {Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _WeekPage();
 }
 
 class _WeekPage extends State<WeekPage> {
-  List<QuestionModel> _listQuestions = []..length = 10;
-  List<TextEditingController> _otherValues = []..length = 6;
+  WeekQuestionModel _weekQuestionModel;
+  final _formKey = GlobalKey<FormState>();
 
-  _WeekPage() {
-    for (int i = 0; i < 10; i++) {
-      this._listQuestions[i] = QuestionModel(null, null, null, null);
-    }
-
-    for (int i = 0; i < 6; i++) {
-      this._otherValues[i] = TextEditingController();
-    }
+  @override
+  void initState() {
+    _weekQuestionModel = new WeekQuestionModel();
+    super.initState();
   }
 
-  Function _onChangedQuestions(int element, int index) {
-    return (value) => (setState(() {
-          this._listQuestions[index].setValues(element, value);
-        }));
+  void sendForm() async {
+    Form.of(_formKey.currentContext).save();
+
+    if (_formKey.currentState.validate()) {
+      WeekQuestionService weekQuestionService = WeekQuestionService();
+      _weekQuestionModel.dataAtual = DateTime.now();
+      _weekQuestionModel.removeAllOther();
+      if (await weekQuestionService.save(_weekQuestionModel)) {
+        goPageWithoutBack(
+            context, () => CalendarPage(widget.notificationService));
+      } else {
+        showSnackBar(context, "Erro ao enviar formulário.");
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Container(
-            child: Column(
-      children: [
-        Column(
+    return Form(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.always,
+        onChanged: () {
+          Form.of(primaryFocus.context).save();
+        },
+        child: SingleChildScrollView(
+            child: Container(
+                child: Column(
           children: [
-            Container(
-                child: Text(
-                  'Teve Alguma Dificuldade Na Introdução',
-                  style: GoogleFonts.notoSans(
-                      color: Colors.black,
-                      fontSize: 22,
-                      decoration: TextDecoration.none),
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
-            RadioListTile<bool>(
-                value: true,
-                groupValue: this._listQuestions[0].boolResult,
-                onChanged: this._onChangedQuestions(0, 0),
-                title: Text('Sim',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<bool>(
-                value: false,
-                groupValue: this._listQuestions[0].boolResult,
-                onChanged: this._onChangedQuestions(0, 0),
-                title: Text('Não',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none)))
-          ],
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        Column(
-          children: [
-            Container(
-                child: Text(
-                  'Seguiu a remomendação de aplicar na hora de dormir e após relações sexuais?',
-                  style: GoogleFonts.notoSans(
-                      color: Colors.black,
-                      fontSize: 22,
-                      decoration: TextDecoration.none),
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
-            RadioListTile<bool>(
-                value: true,
-                groupValue: this._listQuestions[1].boolResult,
-                onChanged: this._onChangedQuestions(0, 1),
-                title: Text('Sim',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<bool>(
-                value: false,
-                groupValue: this._listQuestions[1].boolResult,
-                onChanged: this._onChangedQuestions(0, 1),
-                title: Text('Não',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none)))
-          ],
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        Column(
-          children: [
-            Container(
-                child: Text(
-                  'Sentiu algum incomodo?',
-                  style: GoogleFonts.notoSans(
-                      color: Colors.black,
-                      fontSize: 22,
-                      decoration: TextDecoration.none),
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
-            RadioListTile<bool>(
-                value: true,
-                groupValue: this._listQuestions[2].boolResult,
-                onChanged: this._onChangedQuestions(0, 2),
-                title: Text('Sim, qual?',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<bool>(
-                value: false,
-                groupValue: this._listQuestions[2].boolResult,
-                onChanged: this._onChangedQuestions(0, 2),
-                title: Text('Não',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            (this._listQuestions[2].boolResult == null ||
-                    !this._listQuestions[2].boolResult
-                ? Container()
-                : Container(
-                    margin: EdgeInsets.only(bottom: 20, left: 40),
-                    child: Column(
-                      children: [
-                        Container(
-                            margin:
-                                EdgeInsets.only(top: 20, bottom: 20, left: 20)),
-                        RadioListTile<String>(
-                            value: 'Ardência',
-                            groupValue: this._listQuestions[2].textResult,
-                            onChanged: this._onChangedQuestions(1, 2),
-                            title: Text('Ardência',
-                                style: GoogleFonts.notoSans(
-                                    color: Colors.black,
-                                    fontSize: 19,
-                                    decoration: TextDecoration.none))),
-                        RadioListTile<String>(
-                            value: 'Inchaço',
-                            groupValue: this._listQuestions[2].textResult,
-                            onChanged: this._onChangedQuestions(1, 2),
-                            title: Text('Inchaço',
-                                style: GoogleFonts.notoSans(
-                                    color: Colors.black,
-                                    fontSize: 19,
-                                    decoration: TextDecoration.none))),
-                        RadioListTile<String>(
-                            value: 'Vermelhidão',
-                            groupValue: this._listQuestions[2].textResult,
-                            onChanged: this._onChangedQuestions(1, 2),
-                            title: Text('Vermelhidão',
-                                style: GoogleFonts.notoSans(
-                                    color: Colors.black,
-                                    fontSize: 19,
-                                    decoration: TextDecoration.none))),
-                        RadioListTile<String>(
-                            value: 'Coceira',
-                            groupValue: this._listQuestions[2].textResult,
-                            onChanged: this._onChangedQuestions(1, 2),
-                            title: Text('Coceira',
-                                style: GoogleFonts.notoSans(
-                                    color: Colors.black,
-                                    fontSize: 19,
-                                    decoration: TextDecoration.none))),
-                        RadioListTile<String>(
-                            value: 'Outros',
-                            groupValue: this._listQuestions[2].textResult,
-                            onChanged: this._onChangedQuestions(1, 2),
-                            title: Text('Outros',
-                                style: GoogleFonts.notoSans(
-                                    color: Colors.black,
-                                    fontSize: 19,
-                                    decoration: TextDecoration.none))),
-                        (this._listQuestions[2].textResult == null ||
-                                this._listQuestions[2].textResult != 'Outros'
-                            ? Container()
-                            : Container(
-                                child: TextField(
-                                  controller: this._otherValues[0],
-                                  decoration: InputDecoration(
-                                    hintText: "Incomodo...",
-                                    hintStyle: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.black),
-                                    enabledBorder: new UnderlineInputBorder(
-                                        borderSide:
-                                            new BorderSide(color: Colors.grey)),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.pink),
-                                    ),
-                                  ),
-                                ),
-                                margin: EdgeInsets.only(left: 50, right: 40)))
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+            Column(
+              children: [
+                Container(
+                    child: Text(
+                      'Teve Alguma Dificuldade Na Introdução',
+                      style: GoogleFonts.notoSans(
+                          color: Colors.black,
+                          fontSize: 22,
+                          decoration: TextDecoration.none),
                     ),
-                  ))
-          ],
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        Column(
-          children: [
-            Container(
-                child: Text(
-                  'Como a calcinha ficou suja?',
-                  style: GoogleFonts.notoSans(
-                      color: Colors.black,
-                      fontSize: 22,
-                      decoration: TextDecoration.none),
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
-            RadioListTile<String>(
-                value: 'Pastosa',
-                groupValue: this._listQuestions[3].textResult,
-                onChanged: this._onChangedQuestions(1, 3),
-                title: Text('Pastosa',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<String>(
-                value: 'Líquida',
-                groupValue: this._listQuestions[3].textResult,
-                onChanged: this._onChangedQuestions(1, 3),
-                title: Text('Líquida',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<String>(
-                value: 'Grumosa',
-                groupValue: this._listQuestions[3].textResult,
-                onChanged: this._onChangedQuestions(1, 3),
-                title: Text('Grumosa',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<String>(
-                value: 'Outra',
-                groupValue: this._listQuestions[3].textResult,
-                onChanged: this._onChangedQuestions(1, 3),
-                title: Text('Outra',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            (this._listQuestions[3].textResult == null ||
-                    this._listQuestions[3].textResult != 'Outra'
-                ? Container()
-                : Container(
-                    margin: EdgeInsets.only(left: 50, right: 40),
-                    child: TextField(
-                      controller: this._otherValues[1],
-                      decoration: InputDecoration(
-                        hintText: "Sujeira...",
-                        hintStyle: TextStyle(
-                            fontWeight: FontWeight.w300, color: Colors.black),
-                        enabledBorder: new UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.grey)),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.pink),
+                    margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
+                RadioListTile<bool>(
+                    value: true,
+                    groupValue: _weekQuestionModel.dificuldadeIntroducao,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.dificuldadeIntroducao = value;
+                      });
+                    },
+                    title: Text('Sim',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<bool>(
+                    value: false,
+                    groupValue: _weekQuestionModel.dificuldadeIntroducao,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.dificuldadeIntroducao = value;
+                      });
+                    },
+                    title: Text('Não',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none)))
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Column(
+              children: [
+                Container(
+                    child: Text(
+                      'Seguiu a remomendação de aplicar na hora de dormir e após relações sexuais?',
+                      style: GoogleFonts.notoSans(
+                          color: Colors.black,
+                          fontSize: 22,
+                          decoration: TextDecoration.none),
+                    ),
+                    margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
+                RadioListTile<bool>(
+                    value: true,
+                    groupValue: _weekQuestionModel.aplicouDormirSexo,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.aplicouDormirSexo = value;
+                      });
+                    },
+                    title: Text('Sim',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<bool>(
+                    value: false,
+                    groupValue: _weekQuestionModel.aplicouDormirSexo,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.aplicouDormirSexo = value;
+                      });
+                    },
+                    title: Text('Não',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none)))
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Column(
+              children: [
+                Container(
+                    child: Text(
+                      'Sentiu algum incomodo?',
+                      style: GoogleFonts.notoSans(
+                          color: Colors.black,
+                          fontSize: 22,
+                          decoration: TextDecoration.none),
+                    ),
+                    margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
+                RadioListTile<bool>(
+                    value: false,
+                    groupValue: _weekQuestionModel.sentiuIncomodo,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.sentiuIncomodo = value;
+                      });
+                    },
+                    title: Text('Não',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<bool>(
+                    value: true,
+                    groupValue: _weekQuestionModel.sentiuIncomodo,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.sentiuIncomodo = value;
+                      });
+                    },
+                    title: Text('Sim, qual?',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                (_weekQuestionModel.sentiuIncomodo == null ||
+                        !_weekQuestionModel.sentiuIncomodo
+                    ? Container()
+                    : Container(
+                        margin: EdgeInsets.only(bottom: 20, left: 40),
+                        child: Column(
+                          children: [
+                            Container(
+                                margin: EdgeInsets.only(
+                                    top: 20, bottom: 20, left: 20)),
+                            RadioListTile<String>(
+                                value: 'Ardência',
+                                groupValue: _weekQuestionModel.tipoIncomodo,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _weekQuestionModel.tipoIncomodo = value;
+                                  });
+                                },
+                                title: Text('Ardência',
+                                    style: GoogleFonts.notoSans(
+                                        color: Colors.black,
+                                        fontSize: 19,
+                                        decoration: TextDecoration.none))),
+                            RadioListTile<String>(
+                                value: 'Inchaço',
+                                groupValue: _weekQuestionModel.tipoIncomodo,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _weekQuestionModel.tipoIncomodo = value;
+                                  });
+                                },
+                                title: Text('Inchaço',
+                                    style: GoogleFonts.notoSans(
+                                        color: Colors.black,
+                                        fontSize: 19,
+                                        decoration: TextDecoration.none))),
+                            RadioListTile<String>(
+                                value: 'Vermelhidão',
+                                groupValue: _weekQuestionModel.tipoIncomodo,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _weekQuestionModel.tipoIncomodo = value;
+                                  });
+                                },
+                                title: Text('Vermelhidão',
+                                    style: GoogleFonts.notoSans(
+                                        color: Colors.black,
+                                        fontSize: 19,
+                                        decoration: TextDecoration.none))),
+                            RadioListTile<String>(
+                                value: 'Coceira',
+                                groupValue: _weekQuestionModel.tipoIncomodo,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _weekQuestionModel.tipoIncomodo = value;
+                                  });
+                                },
+                                title: Text('Coceira',
+                                    style: GoogleFonts.notoSans(
+                                        color: Colors.black,
+                                        fontSize: 19,
+                                        decoration: TextDecoration.none))),
+                            RadioListTile<String>(
+                                value: 'Outros',
+                                groupValue: _weekQuestionModel.tipoIncomodo,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _weekQuestionModel.tipoIncomodo = value;
+                                  });
+                                },
+                                title: Text('Outros',
+                                    style: GoogleFonts.notoSans(
+                                        color: Colors.black,
+                                        fontSize: 19,
+                                        decoration: TextDecoration.none))),
+                            (_weekQuestionModel.tipoIncomodo == null ||
+                                    _weekQuestionModel.tipoIncomodo != 'Outros'
+                                ? Container()
+                                : Container(
+                                    child: TextFormField(
+                                      onSaved: (value) {
+                                        setState(() {
+                                          _weekQuestionModel.outroTipoIncomodo =
+                                              value;
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        hintText: "Incomodo...",
+                                        hintStyle: TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.black),
+                                        enabledBorder: new UnderlineInputBorder(
+                                            borderSide: new BorderSide(
+                                                color: Colors.grey)),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.pink),
+                                        ),
+                                      ),
+                                    ),
+                                    margin:
+                                        EdgeInsets.only(left: 50, right: 40)))
+                          ],
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                         ),
-                      ),
-                    ))),
-          ],
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        Column(
-          children: [
-            Container(
-                child: Text(
-                  'Que cor fica na calcinha??',
-                  style: GoogleFonts.notoSans(
-                      color: Colors.black,
-                      fontSize: 22,
-                      decoration: TextDecoration.none),
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
-            RadioListTile<String>(
-                value: 'Amarronzada',
-                groupValue: this._listQuestions[4].textResult,
-                onChanged: this._onChangedQuestions(1, 4),
-                title: Text('Amarronzada',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<String>(
-                value: 'Amarelada',
-                groupValue: this._listQuestions[4].textResult,
-                onChanged: this._onChangedQuestions(1, 4),
-                title: Text('Amarelada',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<String>(
-                value: 'Esverdeada',
-                groupValue: this._listQuestions[4].textResult,
-                onChanged: this._onChangedQuestions(1, 4),
-                title: Text('Esverdeada',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<String>(
-                value: 'Outra',
-                groupValue: this._listQuestions[4].textResult,
-                onChanged: this._onChangedQuestions(1, 4),
-                title: Text('Outra',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            (this._listQuestions[4].textResult == null ||
-                    this._listQuestions[4].textResult != 'Outra'
-                ? Container()
-                : Container(
-                    margin: EdgeInsets.only(left: 50, right: 40),
-                    child: TextField(
-                      controller: this._otherValues[2],
-                      decoration: InputDecoration(
-                        hintText: "Cor...",
-                        hintStyle: TextStyle(
-                            fontWeight: FontWeight.w300, color: Colors.black),
-                        enabledBorder: new UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.grey)),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.pink),
-                        ),
-                      ),
-                    ))),
-          ],
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        Column(
-          children: [
-            Container(
-                child: Text(
-                  'Percebeu saída de sangue?',
-                  style: GoogleFonts.notoSans(
-                      color: Colors.black,
-                      fontSize: 22,
-                      decoration: TextDecoration.none),
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
-            RadioListTile<bool>(
-                value: true,
-                groupValue: this._listQuestions[5].boolResult,
-                onChanged: this._onChangedQuestions(0, 5),
-                title: Text('Sim',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<bool>(
-                value: false,
-                groupValue: this._listQuestions[5].boolResult,
-                onChanged: this._onChangedQuestions(0, 5),
-                title: Text('Não',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none)))
-          ],
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        Column(
-          children: [
-            Container(
-                child: Text(
-                  'Dificultou na relação sexual?',
-                  style: GoogleFonts.notoSans(
-                      color: Colors.black,
-                      fontSize: 22,
-                      decoration: TextDecoration.none),
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
-            RadioListTile<bool>(
-                value: false,
-                groupValue: this._listQuestions[6].boolResult,
-                onChanged: this._onChangedQuestions(0, 6),
-                title: Text('Não?',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<bool>(
-                value: true,
-                groupValue: this._listQuestions[6].boolResult,
-                onChanged: this._onChangedQuestions(0, 6),
-                title: Text('Sim, como?',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            (this._listQuestions[6].boolResult == null ||
-                    !this._listQuestions[6].boolResult
-                ? Container()
-                : Container(
-                    margin: EdgeInsets.only(left: 50, right: 40),
-                    child: TextField(
-                      controller: this._otherValues[3],
-                      decoration: InputDecoration(
-                        hintText: "Causou...",
-                        hintStyle: TextStyle(
-                            fontWeight: FontWeight.w300, color: Colors.black),
-                        enabledBorder: new UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.grey)),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.pink),
-                        ),
-                      ),
-                    )))
-          ],
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        Column(
-          children: [
-            Container(
-                child: Text(
-                  'Menstruou por essses dias?',
-                  style: GoogleFonts.notoSans(
-                      color: Colors.black,
-                      fontSize: 22,
-                      decoration: TextDecoration.none),
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
-            RadioListTile<bool>(
-                value: false,
-                groupValue: this._listQuestions[7].boolResult,
-                onChanged: this._onChangedQuestions(0, 7),
-                title: Text('Não',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<bool>(
-                value: true,
-                groupValue: this._listQuestions[7].boolResult,
-                onChanged: this._onChangedQuestions(0, 7),
-                title: Text('Sim, Quando?',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            (this._listQuestions[7].boolResult == null ||
-                    !this._listQuestions[7].boolResult
-                ? Container()
-                : Container(
-                    margin: EdgeInsets.only(left: 50, right: 40),
-                    child: DateTimeFormField(
-                      decoration: const InputDecoration(
-                        hintStyle: TextStyle(color: Colors.black45),
-                        errorStyle: TextStyle(color: Colors.redAccent),
-                        border: OutlineInputBorder(),
-                        suffixIcon: Icon(Icons.event_note),
-                        labelText: 'Data da menstruação',
-                      ),
-                      mode: DateTimeFieldPickerMode.date,
-                      autovalidateMode: AutovalidateMode.always,
-                      validator: (e) {
-                        if (e == null) {
-                          return 'Data precisa ser preenchida.';
-                        }
+                      ))
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Column(
+              children: [
+                Container(
+                    child: Text(
+                      'Como a calcinha ficou suja?',
+                      style: GoogleFonts.notoSans(
+                          color: Colors.black,
+                          fontSize: 22,
+                          decoration: TextDecoration.none),
+                    ),
+                    margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
+                RadioListTile<String>(
+                    value: 'Pastosa',
+                    groupValue: _weekQuestionModel.tipoSujeiraCalcinha,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.tipoSujeiraCalcinha = value;
+                      });
+                    },
+                    title: Text('Pastosa',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<String>(
+                    value: 'Líquida',
+                    groupValue: _weekQuestionModel.tipoSujeiraCalcinha,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.tipoSujeiraCalcinha = value;
+                      });
+                    },
+                    title: Text('Líquida',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<String>(
+                    value: 'Grumosa',
+                    groupValue: _weekQuestionModel.tipoSujeiraCalcinha,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.tipoSujeiraCalcinha = value;
+                      });
+                    },
+                    title: Text('Grumosa',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<String>(
+                    value: 'Outra',
+                    groupValue: _weekQuestionModel.tipoSujeiraCalcinha,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.tipoSujeiraCalcinha = value;
+                      });
+                    },
+                    title: Text('Outra',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                (_weekQuestionModel.tipoSujeiraCalcinha == null ||
+                        _weekQuestionModel.tipoSujeiraCalcinha != 'Outra'
+                    ? Container()
+                    : Container(
+                        margin: EdgeInsets.only(left: 50, right: 40),
+                        child: TextFormField(
+                          onSaved: (value) {
+                            setState(() {
+                              _weekQuestionModel.outroTipoSujeiraCalcinha =
+                                  value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Sujeira...",
+                            hintStyle: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
+                            enabledBorder: new UnderlineInputBorder(
+                                borderSide: new BorderSide(color: Colors.grey)),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.pink),
+                            ),
+                          ),
+                        ))),
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Column(
+              children: [
+                Container(
+                    child: Text(
+                      'Que cor fica na calcinha??',
+                      style: GoogleFonts.notoSans(
+                          color: Colors.black,
+                          fontSize: 22,
+                          decoration: TextDecoration.none),
+                    ),
+                    margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
+                RadioListTile<String>(
+                    value: 'Amarronzada',
+                    groupValue: _weekQuestionModel.tipoCorResiduoCalcinha,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.tipoCorResiduoCalcinha = value;
+                      });
+                    },
+                    title: Text('Amarronzada',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<String>(
+                    value: 'Amarelada',
+                    groupValue: _weekQuestionModel.tipoCorResiduoCalcinha,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.tipoCorResiduoCalcinha = value;
+                      });
+                    },
+                    title: Text('Amarelada',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<String>(
+                    value: 'Esverdeada',
+                    groupValue: _weekQuestionModel.tipoCorResiduoCalcinha,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.tipoCorResiduoCalcinha = value;
+                      });
+                    },
+                    title: Text('Esverdeada',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<String>(
+                    value: 'Outra',
+                    groupValue: _weekQuestionModel.tipoCorResiduoCalcinha,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.tipoCorResiduoCalcinha = value;
+                      });
+                    },
+                    title: Text('Outra',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                (_weekQuestionModel.tipoCorResiduoCalcinha == null ||
+                        _weekQuestionModel.tipoCorResiduoCalcinha != 'Outra')
+                    ? Container()
+                    : Container(
+                        margin: EdgeInsets.only(left: 50, right: 40),
+                        child: TextFormField(
+                          onSaved: (value) {
+                            setState(() {
+                              _weekQuestionModel.outroTipoCorResiduoCalcinha =
+                                  value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Cor...",
+                            hintStyle: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
+                            enabledBorder: new UnderlineInputBorder(
+                                borderSide: new BorderSide(color: Colors.grey)),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.pink),
+                            ),
+                          ),
+                        )),
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Column(
+              children: [
+                Container(
+                    child: Text(
+                      'Percebeu saída de sangue?',
+                      style: GoogleFonts.notoSans(
+                          color: Colors.black,
+                          fontSize: 22,
+                          decoration: TextDecoration.none),
+                    ),
+                    margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
+                RadioListTile<bool>(
+                    value: true,
+                    groupValue: _weekQuestionModel.sanguePresente,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.sanguePresente = value;
+                      });
+                    },
+                    title: Text('Sim',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<bool>(
+                    value: false,
+                    groupValue: _weekQuestionModel.sanguePresente,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.sanguePresente = value;
+                      });
+                    },
+                    title: Text('Não',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none)))
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Column(
+              children: [
+                Container(
+                    child: Text(
+                      'Dificultou na relação sexual?',
+                      style: GoogleFonts.notoSans(
+                          color: Colors.black,
+                          fontSize: 22,
+                          decoration: TextDecoration.none),
+                    ),
+                    margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
+                RadioListTile<bool>(
+                    value: false,
+                    groupValue: _weekQuestionModel.dificuldadeSexo,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.dificuldadeSexo = value;
+                      });
+                    },
+                    title: Text('Não',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<bool>(
+                    value: true,
+                    groupValue: _weekQuestionModel.dificuldadeSexo,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.dificuldadeSexo = value;
+                      });
+                    },
+                    title: Text('Sim, como?',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                (_weekQuestionModel.dificuldadeSexo == null ||
+                        !_weekQuestionModel.dificuldadeSexo
+                    ? Container()
+                    : Container(
+                        margin: EdgeInsets.only(left: 50, right: 40),
+                        child: TextFormField(
+                          onSaved: (value) {
+                            setState(() {
+                              _weekQuestionModel.tipoDificuldadeSexo = value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Causou...",
+                            hintStyle: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
+                            enabledBorder: new UnderlineInputBorder(
+                                borderSide: new BorderSide(color: Colors.grey)),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.pink),
+                            ),
+                          ),
+                        )))
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Column(
+              children: [
+                Container(
+                    child: Text(
+                      'Menstruou por essses dias?',
+                      style: GoogleFonts.notoSans(
+                          color: Colors.black,
+                          fontSize: 22,
+                          decoration: TextDecoration.none),
+                    ),
+                    margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
+                RadioListTile<bool>(
+                    value: false,
+                    groupValue: _weekQuestionModel.menstruouRecentemente,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.menstruouRecentemente = value;
+                      });
+                    },
+                    title: Text('Não',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<bool>(
+                    value: true,
+                    groupValue: _weekQuestionModel.menstruouRecentemente,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.menstruouRecentemente = value;
+                      });
+                    },
+                    title: Text('Sim, Quando?',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                (_weekQuestionModel.menstruouRecentemente == null ||
+                        !_weekQuestionModel.menstruouRecentemente
+                    ? Container()
+                    : Container(
+                        margin: EdgeInsets.only(left: 50, right: 40),
+                        child: DateTimeFormField(
+                          onSaved: (value) {
+                            setState(() {
+                              _weekQuestionModel.dataMenstruacao = value;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            hintStyle: TextStyle(color: Colors.black45),
+                            errorStyle: TextStyle(color: Colors.redAccent),
+                            border: OutlineInputBorder(),
+                            suffixIcon: Icon(Icons.event_note),
+                            labelText: 'Data da menstruação',
+                          ),
+                          mode: DateTimeFieldPickerMode.date,
+                          autovalidateMode: AutovalidateMode.always,
+                          validator: (e) {
+                            if (e == null) {
+                              return 'Data precisa ser preenchida.';
+                            }
 
-                        if (e != null && e.isBefore(DateTime.now())) {
-                          return null;
-                        } else {
-                          return 'Data precisa ser menor do que a de hoje.';
-                        }
-                      },
-                    )))
+                            if (e != null && e.isBefore(DateTime.now())) {
+                              return null;
+                            } else {
+                              return 'Data precisa ser menor do que a de hoje.';
+                            }
+                          },
+                        )))
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Column(
+              children: [
+                Container(
+                    child: Text(
+                      'A menstruação foi como antes?',
+                      style: GoogleFonts.notoSans(
+                          color: Colors.black,
+                          fontSize: 22,
+                          decoration: TextDecoration.none),
+                    ),
+                    margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
+                RadioListTile<bool>(
+                    value: true,
+                    groupValue: _weekQuestionModel.menstruouRecentemente,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.menstruouRecentemente = value;
+                      });
+                    },
+                    title: Text('Sim',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<bool>(
+                    value: false,
+                    groupValue: _weekQuestionModel.mestruacaoIgualAnterior,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.mestruacaoIgualAnterior = value;
+                      });
+                    },
+                    title: Text('Não, qual a diferença?',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                (_weekQuestionModel.mestruacaoIgualAnterior == null ||
+                        _weekQuestionModel.mestruacaoIgualAnterior
+                    ? Container()
+                    : Container(
+                        margin: EdgeInsets.only(left: 50, right: 40),
+                        child: TextFormField(
+                          onSaved: (value) {
+                            setState(() {
+                              _weekQuestionModel.tipoMestruacaoDiferente =
+                                  value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Foi...",
+                            hintStyle: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
+                            enabledBorder: new UnderlineInputBorder(
+                                borderSide: new BorderSide(color: Colors.grey)),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.pink),
+                            ),
+                          ),
+                        )))
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Column(
+              children: [
+                Container(
+                    child: Text(
+                      'Parou o uso por algum motivo?',
+                      style: GoogleFonts.notoSans(
+                          color: Colors.black,
+                          fontSize: 22,
+                          decoration: TextDecoration.none),
+                    ),
+                    margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
+                RadioListTile<bool>(
+                    value: false,
+                    groupValue: _weekQuestionModel.parouUso,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.parouUso = value;
+                      });
+                    },
+                    title: Text('Não',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                RadioListTile<bool>(
+                    value: true,
+                    groupValue: _weekQuestionModel.parouUso,
+                    onChanged: (value) {
+                      setState(() {
+                        _weekQuestionModel.parouUso = value;
+                      });
+                    },
+                    title: Text('Sim, poruqe?',
+                        style: GoogleFonts.notoSans(
+                            color: Colors.black,
+                            fontSize: 19,
+                            decoration: TextDecoration.none))),
+                (_weekQuestionModel.parouUso == null ||
+                        !_weekQuestionModel.parouUso
+                    ? Container()
+                    : Container(
+                        margin: EdgeInsets.only(left: 50, right: 40),
+                        child: TextFormField(
+                          onSaved: (value) {
+                            setState(() {
+                              _weekQuestionModel.motivoParadaUso = value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Causou...",
+                            hintStyle: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
+                            enabledBorder: new UnderlineInputBorder(
+                                borderSide: new BorderSide(color: Colors.grey)),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.pink),
+                            ),
+                          ),
+                        )))
+              ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            )
           ],
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        Column(
-          children: [
-            Container(
-                child: Text(
-                  'A menstruação foi como antes?',
-                  style: GoogleFonts.notoSans(
-                      color: Colors.black,
-                      fontSize: 22,
-                      decoration: TextDecoration.none),
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
-            RadioListTile<bool>(
-                value: true,
-                groupValue: this._listQuestions[8].boolResult,
-                onChanged: this._onChangedQuestions(0, 8),
-                title: Text('Sim',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<bool>(
-                value: false,
-                groupValue: this._listQuestions[8].boolResult,
-                onChanged: this._onChangedQuestions(0, 8),
-                title: Text('Não, qual a diferença?',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            (this._listQuestions[8].boolResult == null ||
-                    this._listQuestions[8].boolResult
-                ? Container()
-                : Container(
-                    margin: EdgeInsets.only(left: 50, right: 40),
-                    child: TextField(
-                      controller: this._otherValues[4],
-                      decoration: InputDecoration(
-                        hintText: "Foi...",
-                        hintStyle: TextStyle(
-                            fontWeight: FontWeight.w300, color: Colors.black),
-                        enabledBorder: new UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.grey)),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.pink),
-                        ),
-                      ),
-                    )))
-          ],
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        Column(
-          children: [
-            Container(
-                child: Text(
-                  'Parou o uso por algum motivo?',
-                  style: GoogleFonts.notoSans(
-                      color: Colors.black,
-                      fontSize: 22,
-                      decoration: TextDecoration.none),
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
-            RadioListTile<bool>(
-                value: false,
-                groupValue: this._listQuestions[9].boolResult,
-                onChanged: this._onChangedQuestions(0, 9),
-                title: Text('Não',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            RadioListTile<bool>(
-                value: true,
-                groupValue: this._listQuestions[9].boolResult,
-                onChanged: this._onChangedQuestions(0, 9),
-                title: Text('Sim, poruqe?',
-                    style: GoogleFonts.notoSans(
-                        color: Colors.black,
-                        fontSize: 19,
-                        decoration: TextDecoration.none))),
-            (this._listQuestions[9].boolResult == null ||
-                    !this._listQuestions[9].boolResult
-                ? Container()
-                : Container(
-                    margin: EdgeInsets.only(left: 50, right: 40),
-                    child: TextField(
-                      controller: this._otherValues[5],
-                      decoration: InputDecoration(
-                        hintText: "Causou...",
-                        hintStyle: TextStyle(
-                            fontWeight: FontWeight.w300, color: Colors.black),
-                        enabledBorder: new UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.grey)),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.pink),
-                        ),
-                      ),
-                    )))
-          ],
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        )
-      ],
-    )));
+        ))));
   }
 }
