@@ -1,13 +1,4 @@
-import {
-    IsEmail,
-    IsString,
-    IsMongoId,
-    MinLength,
-    MaxLength,
-    IsNotEmpty,
-    IsDateOnly,
-    FixedLength,
-} from 'src/extends/class-validator-br';
+import { IsEmail, IsString, MinLength, MaxLength, IsNotEmpty, IsDateOnly, FixedLength } from 'src/extends/class-validator-br';
 import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateUser {
@@ -42,8 +33,4 @@ export class CreateUser {
     nationalCard: string;
 }
 
-export class UpdateUser extends PartialType(CreateUser) {
-    @IsNotEmpty()
-    @IsMongoId()
-    id: string;
-}
+export class UpdateUser extends PartialType(CreateUser) {}

@@ -3,13 +3,14 @@ import bcrypt from 'bcrypt';
 @Schema({ timestamps: true })
 export class User {
     _id: string;
-    @Prop() createdAt?: Date;
-    @Prop() updatedAt?: Date;
+    @Prop({ select: false }) __v?: number;
+    @Prop({ select: false }) createdAt?: Date;
+    @Prop({ select: false }) updatedAt?: Date;
     @Prop({ required: true }) birthDate: Date;
     @Prop({ required: true }) fullName: string;
-    @Prop({ required: true }) password: string;
+    @Prop({ required: true, select: false }) password: string;
     @Prop({ required: true, unique: true }) email: string;
-    @Prop({ required: true, default: 0 }) attempts: number;
+    @Prop({ required: true, default: 0, select: false }) attempts: number;
     @Prop({ required: true, unique: true }) healthCard: string;
     @Prop({ required: true, unique: true }) nationalCard: string;
 }

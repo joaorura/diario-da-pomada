@@ -24,27 +24,38 @@ export class UserService {
             });
     }
 
-    updateById(body: UpdateUser) {
-        return this.userModel.findByIdAndUpdate(body.id, body, { new: true }).catch((e) => {
-            throw new UnprocessableEntityException(e.message);
-        });
+    find(user: User) {
+        return this.findByUsername(user.email);
     }
 
-    removeById(id: string) {
-        return this.userModel.findByIdAndDelete(id).catch((e) => {
+    update(user: User, body: UpdateUser) {
+        if (Object.values(body).length) {
+            return this.userModel.findByIdAndUpdate(user._id, body, { new: true }).catch((e) => {
+                throw new UnprocessableEntityException(e.message);
+            });
+        } else {
+            throw new UnprocessableEntityException('O objeto de atualização não pode ser vazio.');
+        }
+    }
+
+    remove(user: User) {
+        return this.userModel.findByIdAndDelete(user._id).catch((e) => {
             throw new InternalServerErrorException(e.message);
         });
     }
 
-    findByUsername(username: string) {
+    findByUsername(username: string, select: string[] = []) {
         const or = [{ email: username }, { healthCard: username }, { nationalCard: username }];
-        return this.userModel.findOne({ $or: or }).catch((e) => {
-            throw new InternalServerErrorException(e.message);
-        });
+        return this.userModel
+            .findOne({ $or: or })
+            .select(select)
+            .catch((e) => {
+                throw new InternalServerErrorException(e.message);
+            });
     }
 
     async validate(username: string, password: string): Promise<User | null> {
-        const user = (await this.findByUsername(username)) as any;
+        const user = (await this.findByUsername(username, ['+password'])) as any;
         const isValid = await user?.comparePassword(password);
         return isValid ? user : null;
     }

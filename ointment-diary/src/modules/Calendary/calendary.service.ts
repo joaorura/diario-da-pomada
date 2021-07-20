@@ -34,11 +34,11 @@ export class CalendaryService {
 
             if (expired) {
                 const { weekly, daily } = await this.update(userId, body);
-                return { weekly, daily };
+                return { weekly, daily, isNew: true };
             }
 
             const { weekly, daily } = finded;
-            return { weekly, daily };
+            return { weekly, daily, isNew: false };
         }
 
         return null;
