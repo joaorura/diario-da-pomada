@@ -28,9 +28,9 @@ export class UserService {
         return this.findByUsername(user.email);
     }
 
-    update(user: User, body: UpdateUser) {
+    async update(user: User, body: UpdateUser) {
         if (Object.values(body).length) {
-            return this.userModel.findByIdAndUpdate(user._id, body, { new: true }).catch((e) => {
+            await this.userModel.findByIdAndUpdate(user._id, body, { new: true }).catch((e) => {
                 throw new UnprocessableEntityException(e.message);
             });
         } else {

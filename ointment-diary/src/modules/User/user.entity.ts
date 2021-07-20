@@ -32,7 +32,7 @@ UserSchema.pre('save', async function (): Promise<void> {
     }
 });
 
-UserSchema.pre('findOneAndUpdate', async function (): Promise<void> {
+UserSchema.pre('findByIdAndUpdate', async function (): Promise<void> {
     const self: any = this;
     const document: any = this.getUpdate();
     await uniqueFieldValidation(self.model, 'nationalCard', document.nationalCard, document.id);
