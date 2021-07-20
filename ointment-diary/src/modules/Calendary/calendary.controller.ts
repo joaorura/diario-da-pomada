@@ -8,6 +8,6 @@ export class CalendaryController {
 
     @Get()
     async findByUserId(@Request() request, @Body() body: GetCalendary) {
-        return this.calendaryService.findByUserId(request.user._id, body);
+        return await this.calendaryService.findByUserId(request.user._id, body);
     }
 }

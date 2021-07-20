@@ -7,7 +7,8 @@ export class Calendary {
     @Prop() createdAt?: Date;
     @Prop() updatedAt?: Date;
     @Prop({ required: true }) dueDate: Date;
-    @Prop({ required: true, type: SchemaMongoose.Types.Mixed }) dates: any;
+    @Prop({ required: true }) daily: string[];
+    @Prop({ required: true }) weekly: string[];
     @Prop({ required: true, unique: true, type: SchemaMongoose.Types.ObjectId }) userId: string;
 }
 

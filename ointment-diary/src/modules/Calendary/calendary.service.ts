@@ -11,15 +11,37 @@ export class CalendaryService {
 
     create(userId: string, body: CreateCalendary) {
         const calendary = this.createCalendary(body.currentDate);
-        return this.calendaryModel.create(Object.assign(calendary, { userId })).catch((e) => {
+        const completeCalendary = Object.assign(calendary, { userId });
+        return this.calendaryModel.create(completeCalendary).catch((e) => {
             throw new UnprocessableEntityException(e.message);
         });
     }
 
-    findByUserId(userId: string, body: GetCalendary) {
-        return this.calendaryModel.findOne({ userId }).catch((e) => {
+    update(userId: string, body: GetCalendary) {
+        const calendary = this.createCalendary(body.currentDate) as any;
+        return this.calendaryModel.findOneAndUpdate({ userId }, calendary).catch((e) => {
+            throw new UnprocessableEntityException(e.message);
+        });
+    }
+
+    async findByUserId(userId: string, body: GetCalendary) {
+        const finded = await this.calendaryModel.findOne({ userId }).catch((e) => {
             throw new InternalServerErrorException(e.message);
         });
+
+        if (finded) {
+            const expired = moment(body.currentDate).isAfter(finded.dueDate);
+
+            if (expired) {
+                const { weekly, daily } = await this.update(userId, body);
+                return { weekly, daily };
+            }
+
+            const { weekly, daily } = finded;
+            return { weekly, daily };
+        }
+
+        return null;
     }
 
     private createCalendary(currentDate: Date) {
@@ -27,23 +49,25 @@ export class CalendaryService {
         const format = 'YYYY-MM-DD';
         let dueDate: string;
         const weekDays = 7;
-        const dates = {};
+        const weekly = [];
+        const daily = [];
         const weeks = 6;
 
         for (let i = 0; i < weeks; i++) {
             for (let i = 0; i <= weekDays; i++, curr.add(1, 'day')) {
                 const date = curr.format(format);
-                dates[date] = 'daily';
+                daily.push(date);
 
                 if (i == 7) {
-                    dates[date] = 'weekly';
+                    weekly.push(date);
                     dueDate = date;
                 }
             }
         }
 
         return {
-            dates,
+            daily,
+            weekly,
             dueDate,
         };
     }
