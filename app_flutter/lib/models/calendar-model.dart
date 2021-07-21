@@ -1,18 +1,15 @@
-import 'dart:convert';
-
 class CalendarModel {
   final Map<DateTime, List<String>> events, holidays;
-  final bool newCalendar;
+  final bool isNew;
   bool erro = false;
 
-  CalendarModel(this.events, this.holidays, this.newCalendar, {this.erro});
+  CalendarModel(this.events, this.holidays, this.isNew, {this.erro});
 
-  static Map<DateTime, List<String>> _convert(data, String value) {
-    List<String> listString = jsonDecode(data);
+  static Map<DateTime, List<String>> _convert(
+      List<dynamic> data, String value) {
     Map<DateTime, List<String>> result = new Map();
-
-    for (var item in listString) {
-      DateTime data = DateTime.parse(item);
+    for (var item in data) {
+      DateTime data = DateTime.parse(item.toString());
       result.addAll({
         data: [value]
       });
@@ -22,7 +19,7 @@ class CalendarModel {
   }
 
   CalendarModel.fromJson(Map<String, dynamic> json)
-      : events = _convert(json['acompanhamento'], "acompanhamento"),
-        holidays = _convert(json['semanal'], "semanal"),
-        newCalendar = json['newCalendar'];
+      : events = _convert(json['daily'], "daily"),
+        holidays = _convert(json['weekly'], "weekly"),
+        isNew = false;
 }

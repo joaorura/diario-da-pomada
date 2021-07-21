@@ -1,9 +1,9 @@
-import 'package:app_flutter/default-page/default-page.dart';
-import 'package:app_flutter/login-page/base-page.dart';
-import 'package:app_flutter/login-page/button-camp.dart';
-import 'package:app_flutter/login-page/camp-text.dart';
-import 'package:app_flutter/login-page/logo-login.dart';
-import 'package:app_flutter/login-page/sigup-page.dart';
+import 'package:app_flutter/pages/default-page/default-page.dart';
+import 'package:app_flutter/pages/login-page/base-page.dart';
+import 'package:app_flutter/pages/login-page/button-camp.dart';
+import 'package:app_flutter/pages/login-page/camp-text.dart';
+import 'package:app_flutter/pages/login-page/logo-login.dart';
+import 'package:app_flutter/pages/login-page/sigup-page.dart';
 import 'package:app_flutter/models/login-model.dart';
 import 'package:app_flutter/services/login-service.dart';
 import 'package:app_flutter/services/notification-service.dart';

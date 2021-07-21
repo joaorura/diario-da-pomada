@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_flutter/first-carousel/white-dot.dart';
+import 'package:app_flutter/pages/first-carousel/white-dot.dart';
 
 class ListWhiteDot extends StatefulWidget {
   final int whiteIndex, size;

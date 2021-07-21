@@ -1,8 +1,8 @@
-import 'package:app_flutter/calendar-page/calendar-page.dart';
-import 'package:app_flutter/configuration-page/configuration-page.dart';
-import 'package:app_flutter/informations-page/informations-page.dart';
+import 'package:app_flutter/pages/calendar-page/calendar-page.dart';
+import 'package:app_flutter/pages/configuration-page/configuration-page.dart';
+import 'package:app_flutter/pages/informations-page/informations-page.dart';
 import 'package:app_flutter/services/notification-service.dart';
-import 'package:app_flutter/use-page/use-page.dart';
+import 'package:app_flutter/pages/use-page/use-page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

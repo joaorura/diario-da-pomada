@@ -8,7 +8,7 @@ class DioService {
 
   Dio dio;
 
-  DioService() {
+  DioService({String token}) {
     String baseUrl;
 
     if (kReleaseMode) {
@@ -20,10 +20,18 @@ class DioService {
     StorageService storageService = new StorageService();
     dio = new Dio(new BaseOptions(baseUrl: baseUrl, connectTimeout: 5000));
 
-    dio.options.headers['authorization'] = storageService.getToken();
+    if (token == null) {
+      token = storageService.getToken();
+
+      if (token != null) {
+        setToken(token);
+      }
+    } else {
+      setToken(token);
+    }
   }
 
   void setToken(String token) {
-    dio.options.headers['authorization'] = token;
+    dio.options.headers['Authorization'] = "Bearer $token";
   }
 }

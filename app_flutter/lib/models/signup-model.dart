@@ -20,11 +20,26 @@ class SignupModel {
         "nationalCard": nationalCard
       };
 
+  Map<String, dynamic> toJsonAtt() => {
+        "email": email,
+        "birthDate": DateFormat('yyyy-MM-dd').format(birthDate),
+        "fullName": fullName,
+        "healthCard": heathCard,
+        "nationalCard": nationalCard
+      };
+
   SignupModel.fromJson(Map<String, dynamic> json)
       : email = json['email'],
-        birthDate = DateTime.parse(json['birthData']),
+        birthDate = DateTime.parse(json['birthDate']),
         fullName = json['fullName'],
         password = json['password'],
+        heathCard = json['healthCard'],
+        nationalCard = json['nationalCard'];
+
+  SignupModel.fromJsonAtt(Map<String, dynamic> json)
+      : email = json['email'],
+        birthDate = DateTime.parse(json['birthDate']),
+        fullName = json['fullName'],
         heathCard = json['healthCard'],
         nationalCard = json['nationalCard'];
 }

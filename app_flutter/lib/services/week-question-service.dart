@@ -6,7 +6,7 @@ class WeekQuestionService extends DioService {
     try {
       await dio.post('/week', data: answers);
       return true;
-    } catch (error) {
+    } on Exception catch (error) {
       return false;
     }
   }

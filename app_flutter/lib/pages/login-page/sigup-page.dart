@@ -1,9 +1,11 @@
-import 'package:app_flutter/calendar-page/calendar-page.dart';
-import 'package:app_flutter/configuration-page/configuration-page.dart';
-import 'package:app_flutter/login-page/base-page.dart';
-import 'package:app_flutter/login-page/button-camp.dart';
-import 'package:app_flutter/login-page/camp-text.dart';
-import 'package:app_flutter/login-page/logo-login.dart';
+import 'package:app_flutter/main.dart';
+import 'package:app_flutter/pages/calendar-page/calendar-page.dart';
+import 'package:app_flutter/pages/configuration-page/configuration-page.dart';
+import 'package:app_flutter/pages/default-page/default-page.dart';
+import 'package:app_flutter/pages/login-page/base-page.dart';
+import 'package:app_flutter/pages/login-page/button-camp.dart';
+import 'package:app_flutter/pages/login-page/camp-text.dart';
+import 'package:app_flutter/pages/login-page/logo-login.dart';
 import 'package:app_flutter/models/signup-model.dart';
 import 'package:app_flutter/services/notification-service.dart';
 import 'package:app_flutter/services/signup-service.dart';
@@ -54,36 +56,40 @@ class _SignupPageState extends State<SignupPage> {
         lastDate: DateTime.now());
     if (picked != null && picked != _data.birthDate) {
       _data.birthDate = picked;
-      goPageWithoutBack(context,
-          () => SignupPage(widget.notificationService, previousData: _data))();
+      goPageWithoutBack(
+          context,
+          () => SignupPage(widget.notificationService,
+              previousData: _data, edit: _edit))();
     }
   }
 
   void sendForm() async {
     if (_formKey.currentState.validate()) {
       SignupService service = new SignupService();
-      if (_edit) {
-        if (await service.attUser(_data)) {
-          showSnackBar(context, "Falha ao atualizar o cadastro.");
-        } else {
-          showSnackBar(context, "Cadastro atualizado.");
-        }
+      if (await service.signUp(_data)) {
+        goPageWithoutBack(
+            context, () => DefaultPage(widget.notificationService))();
+      } else {
+        showSnackBar(context, "Falha ao realizar o cadastro.");
+      }
+    }
+  }
 
+  void sendFormAtt() async {
+    if (_formKey.currentState.validate()) {
+      SignupService service = new SignupService();
+      if (await service.attUser(_data)) {
+        showSnackBar(context, "Cadastro atualizado.");
         goPageWithoutBack(
             context, () => ConfigurationPage(widget.notificationService))();
       } else {
-        if (await service.signUp(_data)) {
-          goPageWithoutBack(
-              context, () => CalendarPage(widget.notificationService))();
-        } else {
-          showSnackBar(context, "Falha ao realizar o cadastro.");
-        }
+        showSnackBar(context, "Falha ao atualizar o cadastro.");
       }
     }
   }
 
   Widget buildFuture(BuildContext context) {
-    Widget editText;
+    Widget editText, passwordCamps, buttons;
 
     if (_edit) {
       editText = Container(
@@ -93,8 +99,71 @@ class _SignupPageState extends State<SignupPage> {
                   color: Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.bold)));
+      passwordCamps = Container();
+
+      buttons = Container(
+          margin: EdgeInsetsDirectional.only(bottom: 50),
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              ButtonCamp(theText: "Atualizar Cadastro", onPressed: sendFormAtt)
+            ],
+          ));
     } else {
       editText = Container();
+      passwordCamps = Column(children: [
+        CampText(
+          "Senha",
+          (String password) => _data.password = password,
+          inputs: [new LengthLimitingTextInputFormatter(128)],
+          validate: (value) {
+            if (RegExp(
+                    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                .hasMatch(value)) {
+              if (_data.password != _secondPassword) {
+                return "Senhas digitadas não são iguais.";
+              }
+              return null;
+            } else {
+              return 'Senha não nos conformes.';
+            }
+          },
+          dataCamp: _data.password,
+          obcure: true,
+        ),
+        CampText(
+          "Repita a senha",
+          (String password) => _secondPassword = password,
+          inputs: [new LengthLimitingTextInputFormatter(128)],
+          validate: (value) {
+            if (RegExp(
+                    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                .hasMatch(value)) {
+              if (_data.password != _secondPassword) {
+                return "Senhas digitadas não são iguais.";
+              }
+              return null;
+            } else {
+              return 'Senha não nos conformes.';
+            }
+          },
+          dataCamp: _data.password,
+          obcure: true,
+        )
+      ]);
+
+      buttons = Container(
+          margin: EdgeInsetsDirectional.only(bottom: 50),
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              ButtonCamp(
+                  theText: "Já tem uma Conta?",
+                  onPressed: goPageWithoutBack(
+                      context, () => LoginPage(widget.notificationService))),
+              ButtonCamp(theText: "Confirmar Cadastro", onPressed: sendForm)
+            ],
+          ));
     }
 
     return BasePage(children: [
@@ -153,44 +222,7 @@ class _SignupPageState extends State<SignupPage> {
               inputs: [new LengthLimitingTextInputFormatter(128)],
               dataCamp: _data.fullName,
             ),
-            CampText(
-              "Senha",
-              (String password) => _data.password = password,
-              inputs: [new LengthLimitingTextInputFormatter(128)],
-              validate: (value) {
-                if (RegExp(
-                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                    .hasMatch(value)) {
-                  if (_data.password != _secondPassword) {
-                    return "Senhas digitadas não são iguais.";
-                  }
-                  return null;
-                } else {
-                  return 'Senha não nos conformes.';
-                }
-              },
-              dataCamp: _data.password,
-              obcure: true,
-            ),
-            CampText(
-              "Repita a senha",
-              (String password) => _secondPassword = password,
-              inputs: [new LengthLimitingTextInputFormatter(128)],
-              validate: (value) {
-                if (RegExp(
-                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                    .hasMatch(value)) {
-                  if (_data.password != _secondPassword) {
-                    return "Senhas digitadas não são iguais.";
-                  }
-                  return null;
-                } else {
-                  return 'Senha não nos conformes.';
-                }
-              },
-              dataCamp: _data.password,
-              obcure: true,
-            ),
+            passwordCamps,
             CampText(
               "Cartão do SUS",
               (String heathCard) => _data.heathCard = heathCard,
@@ -217,17 +249,7 @@ class _SignupPageState extends State<SignupPage> {
               dataCamp: _data.nationalCard,
             )
           ])),
-      Container(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              ButtonCamp(
-                  theText: "Já tem uma Conta?",
-                  onPressed: goPageWithoutBack(
-                      context, () => LoginPage(widget.notificationService))),
-              ButtonCamp(theText: "Confirmar Cadastro", onPressed: sendForm)
-            ],
-          )),
+      buttons
     ]);
   }
 
