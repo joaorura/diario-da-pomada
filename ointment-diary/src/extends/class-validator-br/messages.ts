@@ -1,4 +1,5 @@
 export const IsStringMessage = 'A propriedade $property precisa ser um texto.';
+export const IsBooleanMessage = 'A propriedade $property precisa ser um booleano.';
 export const IsEmailMessage = 'A propriedade $property precisa ser um e-mail válido.';
 export const IsNumberStringMessage = 'A propriedade $property precisa ser um número.';
 export const IsNotEmptyMessage = 'A propriedade $property é obrigatória: não pode ser vazia.';

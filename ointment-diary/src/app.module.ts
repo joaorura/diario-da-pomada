@@ -10,18 +10,20 @@ import { MONGODB_URI, mongoOptions } from './app.config';
 import { JwtAuthGuard } from './modules/Auth/jwt-auth.guard';
 import { SharedModule } from './modules/Shared/shared.module';
 import { CalendaryModule } from './modules/Calendary/calendary.module';
+import { QuestionsModule } from './modules/Questions/questions.module';
 import { HomeCarouselModule } from './modules/HomeCarousel/home-carousel.module';
 
 @Module({
     imports: [
         AuthModule,
-        SharedModule,
         UserModule,
+        SharedModule,
+        CalendaryModule,
+        QuestionsModule,
         HomeCarouselModule,
         NestjsFormDataModule,
         ConfigModule.forRoot({ load: [AuthConfig] }),
         MongooseModule.forRoot(MONGODB_URI, mongoOptions),
-        CalendaryModule,
     ],
     providers: [{ provide: APP_GUARD, useClass: JwtAuthGuard }],
 })

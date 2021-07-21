@@ -5,6 +5,7 @@ export * from './decorators/HasMimeType';
 export * from './decorators/MaxFileSize';
 export * from './decorators/FixedLength';
 export * from './decorators/IsDateOnly';
+export * from './decorators/IsBoolean';
 export * from './decorators/IsMongoId';
 export * from './decorators/MinLength';
 export * from './decorators/MaxLength';
