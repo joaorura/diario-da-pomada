@@ -44,21 +44,25 @@ class _CalendarPageState extends State<CalendarPage> {
       typeDay = holidayDay;
     }
 
+    if (DateTime.now().isBefore(day)) {
+      return;
+    }
+
     typeDay = typeDay.toLowerCase();
 
     switch (typeDay) {
       case 'daily':
         goPageWithBack(
             context,
-            () => MaterialAppCustom(
-                DailyPage(widget.notificationService), 'Acompanhamento'))();
+            () => MaterialAppCustom(DailyPage(widget.notificationService, day),
+                'Acompanhamento'))();
         break;
 
       case 'weekly':
         goPageWithBack(
             context,
             () => MaterialAppCustom(
-                WeeklyPage(widget.notificationService), 'Semanal'))();
+                WeeklyPage(widget.notificationService, day), 'Semanal'))();
         break;
 
       default:

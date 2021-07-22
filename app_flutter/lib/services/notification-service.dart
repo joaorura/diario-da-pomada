@@ -27,6 +27,10 @@ class NotificationService {
 
   void scheduleNotification(
       NotificationModel notifications, DateTime scheduledTime) async {
+    if (scheduledTime.isBefore(DateTime.now())) {
+      return;
+    }
+
     var androidDetails = new AndroidNotificationDetails(
         "Diário da Pomada", "Diário da Pomada", "Diário da Pomada",
         importance: Importance.high);
@@ -36,6 +40,7 @@ class NotificationService {
 
     String timeZoneName = await timeZone.getTimeZoneName();
     final location = await timeZone.getLocation(timeZoneName);
+
     final scheduledDate = tz.TZDateTime.from(scheduledTime, location);
 
     fltrNotification.zonedSchedule(notifications.id, notifications.title,

@@ -1,4 +1,4 @@
-import 'package:app_flutter/pages/calendar-page/calendar-page.dart';
+import 'package:app_flutter/pages/default-page/default-page.dart';
 import 'package:app_flutter/pages/login-page/button-camp.dart';
 import 'package:app_flutter/models/week-question-model.dart';
 import 'package:app_flutter/services/notification-service.dart';
@@ -11,8 +11,10 @@ import 'package:date_field/date_field.dart';
 
 class WeeklyPage extends StatefulWidget {
   final NotificationService notificationService;
+  final DateTime dataMarcacao;
 
-  WeeklyPage(this.notificationService, {Key key}) : super(key: key);
+  WeeklyPage(this.notificationService, this.dataMarcacao, {Key key})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _WeeklyPageState();
@@ -31,7 +33,8 @@ class _WeeklyPageState extends State<WeeklyPage> {
   void sendForm() async {
     if (_formKey.currentState.validate()) {
       WeekQuestionService weekQuestionService = WeekQuestionService();
-      _weekQuestionModel.dataAtual = DateTime.now();
+      _weekQuestionModel.dataDePreenchimento = DateTime.now();
+      _weekQuestionModel.dataDeMarcacao = widget.dataMarcacao;
       if (!_weekQuestionModel.validate()) {
         showSnackBar(context, "Preencha todas as questões.");
         return;
@@ -42,7 +45,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
         showSnackBar(context, "Fórmulario enviado.");
 
         goPageWithoutBack(
-            context, () => CalendarPage(widget.notificationService));
+            context, () => DefaultPage(widget.notificationService))();
       } else {
         showSnackBar(context, "Erro ao enviar formulário.");
       }
@@ -55,7 +58,11 @@ class _WeeklyPageState extends State<WeeklyPage> {
         key: _formKey,
         autovalidateMode: AutovalidateMode.always,
         onChanged: () {
-          Form.of(primaryFocus.context).save();
+          FormState form = Form.of(primaryFocus.context);
+
+          if (form != null) {
+            form.save();
+          }
         },
         child: SingleChildScrollView(
             child: Container(
@@ -748,7 +755,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
                         _weekQuestionModel.parouUso = value;
                       });
                     },
-                    title: Text('Sim, poruqe?',
+                    title: Text('Sim, porque?',
                         style: GoogleFonts.notoSans(
                             color: Colors.black,
                             fontSize: 19,

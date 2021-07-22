@@ -1,4 +1,4 @@
-import 'package:app_flutter/pages/calendar-page/calendar-page.dart';
+import 'package:app_flutter/pages/default-page/default-page.dart';
 import 'package:app_flutter/pages/login-page/button-camp.dart';
 import 'package:app_flutter/models/daily-question-model.dart';
 import 'package:app_flutter/services/daily-question-service.dart';
@@ -10,8 +10,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class DailyPage extends StatefulWidget {
   final NotificationService notificationService;
+  final DateTime dataMarcacao;
 
-  DailyPage(this.notificationService, {Key key}) : super(key: key);
+  DailyPage(this.notificationService, this.dataMarcacao, {Key key})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DailyPageState();
@@ -23,11 +25,12 @@ class _DailyPageState extends State<DailyPage> {
 
   void sendForm() async {
     DailyQuestionService dailyQuestionService = DailyQuestionService();
-    _dailyQuestionModel.dataAtual = DateTime.now();
+    _dailyQuestionModel.dataDePreenchimento = DateTime.now();
+    _dailyQuestionModel.dataDeMarcacao = widget.dataMarcacao;
     if (await dailyQuestionService.save(_dailyQuestionModel)) {
       showSnackBar(context, "Questões enviadas!");
       goPageWithoutBack(
-          context, () => CalendarPage(widget.notificationService));
+          context, () => DefaultPage(widget.notificationService))();
     } else {
       showSnackBar(context, "Falha ao enviar questões");
     }
@@ -76,7 +79,7 @@ class _DailyPageState extends State<DailyPage> {
                           _dailyQuestionModel.usouPomada = value;
                         });
                       },
-                      title: Text('Não',
+                      title: Text('Não, qual o motivo?',
                           style: GoogleFonts.notoSans(
                               color: Colors.black,
                               fontSize: 19,

@@ -28,7 +28,9 @@ class WeekQuestionModel {
 
   bool parouUso;
   String motivoParadaUso;
-  DateTime dataAtual;
+
+  DateTime dataDeMarcacao;
+  DateTime dataDePreenchimento;
 
   static const String _otherDefault = "outr";
 
@@ -80,10 +82,10 @@ class WeekQuestionModel {
             tipoMestruacaoDiferente == null) ||
         parouUso == null ||
         (parouUso != null && parouUso == true && motivoParadaUso == null) ||
-        dataAtual == null);
+        dataDeMarcacao == null ||
+        dataDePreenchimento == null);
   }
 
-  WeekQuestionModel();
   Map<String, dynamic> toJson() => {
         "dificuldadeIntroducao": dificuldadeIntroducao,
         "aplicouDormirSexo": aplicouDormirSexo,
@@ -95,11 +97,13 @@ class WeekQuestionModel {
         "dificuldadeSexo": dificuldadeSexo,
         "tipoDificuldadeSexo": tipoDificuldadeSexo,
         "menstruouRecentemente": menstruouRecentemente,
-        "dataMenstruacao": dataMenstruacao,
+        "dataMenstruacao": DateFormat('yyyy-MM-dd').format(dataMenstruacao),
         "mestruacaoIgualAnterior": mestruacaoIgualAnterior,
         "tipoMestruacaoDiferente": tipoMestruacaoDiferente,
         "parouUso": parouUso,
         "motivoParadaUso": motivoParadaUso,
-        "dataAtual": DateFormat('yyyy-MM-dd').format(dataAtual)
+        "dataDeMarcacao": DateFormat('yyyy-MM-dd').format(dataDeMarcacao),
+        "dataDePreenchimento":
+            DateFormat('yyyy-MM-dd').format(dataDePreenchimento)
       };
 }

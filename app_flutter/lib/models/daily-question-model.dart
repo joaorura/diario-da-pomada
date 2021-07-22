@@ -3,13 +3,16 @@ import 'package:intl/intl.dart';
 class DailyQuestionModel {
   bool usouPomada;
   String motivoNaoUsar;
-  DateTime dataAtual;
+  DateTime dataDeMarcacao;
+  DateTime dataDePreenchimento;
 
   DailyQuestionModel();
 
   Map<String, dynamic> toJson() => {
         'usouPomada': usouPomada,
         'motivoNaoUsar': motivoNaoUsar,
-        "dataAtual": DateFormat('yyyy-MM-dd').format(dataAtual)
+        "dataDeMarcacao": DateFormat('yyyy-MM-dd').format(dataDeMarcacao),
+        "dataDePreenchimento":
+            DateFormat('yyyy-MM-dd').format(dataDePreenchimento)
       };
 }
