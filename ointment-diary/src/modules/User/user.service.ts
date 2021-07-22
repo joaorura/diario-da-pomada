@@ -44,6 +44,15 @@ export class UserService {
         });
     }
 
+    findById(id: string, select = ['-password']) {
+        return this.userModel
+            .findById(id)
+            .select(select)
+            .catch((e) => {
+                throw new InternalServerErrorException(e.message);
+            });
+    }
+
     findByUsername(username: string, select: string[] = []) {
         const or = [{ email: username }, { healthCard: username }, { nationalCard: username }];
         return this.userModel

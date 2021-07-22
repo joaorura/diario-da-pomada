@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import bcrypt from 'bcrypt';
+
 @Schema({ timestamps: true })
 export class User {
     _id: string;
@@ -8,11 +9,12 @@ export class User {
     @Prop({ select: false }) updatedAt?: Date;
     @Prop({ required: true }) birthDate: Date;
     @Prop({ required: true }) fullName: string;
-    @Prop({ required: true, select: false }) password: string;
     @Prop({ required: true, unique: true }) email: string;
-    @Prop({ required: true, default: 0, select: false }) attempts: number;
+    @Prop({ required: true, default: 'user' }) role: string;
+    @Prop({ required: true, select: false }) password: string;
     @Prop({ required: true, unique: true }) healthCard: string;
     @Prop({ required: true, unique: true }) nationalCard: string;
+    @Prop({ required: true, default: 0, select: false }) attempts: number;
 }
 
 export type UserDocument = User & Document;

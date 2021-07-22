@@ -7,7 +7,7 @@ export default () => ({
         publicKey: readFileSync(join(__dirname, 'public.pem')),
         signOptions: {
             algorithm: 'RS256',
-            expiresIn: '1d',
+            expiresIn: '30d',
         },
     },
 });

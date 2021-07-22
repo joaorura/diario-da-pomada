@@ -11,6 +11,11 @@ export class UserController {
         return await this.userService.find(request.user);
     }
 
+    @Get('role')
+    async findRole(@Request() request) {
+        return { role: request.user.role };
+    }
+
     @Patch()
     async update(@Request() request, @Body() body: UpdateUser) {
         return await this.userService.update(request.user, body);
