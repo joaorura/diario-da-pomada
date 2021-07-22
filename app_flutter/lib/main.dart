@@ -1,4 +1,5 @@
-import 'package:app_flutter/first-carousel/first-carousel.dart';
+import 'package:app_flutter/pages/default-page/default-page.dart';
+import 'package:app_flutter/pages/first-carousel/first-carousel.dart';
 import 'package:app_flutter/services/login-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-import 'default-page/default-page.dart';
+import 'utils/timezone.dart';
 
 Future<void> _configureLocalTimeZone() async {
   tz.initializeTimeZones();
@@ -17,11 +18,13 @@ Future<void> _configureLocalTimeZone() async {
 }
 
 SharedPreferences prefs;
+final TimeZone timeZone = TimeZone();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await _configureLocalTimeZone();
   prefs = await SharedPreferences.getInstance();
+
   runApp(MyApp());
 }
 
@@ -43,7 +46,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   NotificationService notificationService;
-
   void initState() {
     super.initState();
     notificationService = new NotificationService();

@@ -1,4 +1,5 @@
-import 'package:app_flutter/calendar-page/calendar-page.dart';
+import 'package:app_flutter/pages/calendar-page/calendar-page.dart';
+import 'package:app_flutter/pages/login-page/button-camp.dart';
 import 'package:app_flutter/models/week-question-model.dart';
 import 'package:app_flutter/services/notification-service.dart';
 import 'package:app_flutter/services/week-question-service.dart';
@@ -8,16 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:date_field/date_field.dart';
 
-class WeekPage extends StatefulWidget {
+class WeeklyPage extends StatefulWidget {
   final NotificationService notificationService;
 
-  WeekPage(this.notificationService, {Key key}) : super(key: key);
+  WeeklyPage(this.notificationService, {Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _WeekPage();
+  State<StatefulWidget> createState() => _WeeklyPageState();
 }
 
-class _WeekPage extends State<WeekPage> {
+class _WeeklyPageState extends State<WeeklyPage> {
   WeekQuestionModel _weekQuestionModel;
   final _formKey = GlobalKey<FormState>();
 
@@ -28,13 +29,18 @@ class _WeekPage extends State<WeekPage> {
   }
 
   void sendForm() async {
-    Form.of(_formKey.currentContext).save();
-
     if (_formKey.currentState.validate()) {
       WeekQuestionService weekQuestionService = WeekQuestionService();
       _weekQuestionModel.dataAtual = DateTime.now();
+      if (!_weekQuestionModel.validate()) {
+        showSnackBar(context, "Preencha todas as questões.");
+        return;
+      }
+
       _weekQuestionModel.removeAllOther();
       if (await weekQuestionService.save(_weekQuestionModel)) {
+        showSnackBar(context, "Fórmulario enviado.");
+
         goPageWithoutBack(
             context, () => CalendarPage(widget.notificationService));
       } else {
@@ -658,10 +664,10 @@ class _WeekPage extends State<WeekPage> {
                     margin: EdgeInsets.only(top: 20, bottom: 20, left: 20)),
                 RadioListTile<bool>(
                     value: true,
-                    groupValue: _weekQuestionModel.menstruouRecentemente,
+                    groupValue: _weekQuestionModel.mestruacaoIgualAnterior,
                     onChanged: (value) {
                       setState(() {
-                        _weekQuestionModel.menstruouRecentemente = value;
+                        _weekQuestionModel.mestruacaoIgualAnterior = value;
                       });
                     },
                     title: Text('Sim',
@@ -773,7 +779,11 @@ class _WeekPage extends State<WeekPage> {
               ],
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-            )
+            ),
+            Container(
+                width: MediaQuery.of(context).size.width,
+                child:
+                    ButtonCamp(theText: "Enviar Questões", onPressed: sendForm))
           ],
         ))));
   }

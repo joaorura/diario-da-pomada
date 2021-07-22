@@ -10,13 +10,15 @@ import 'package:dio/dio.dart';
 class LoginService extends DioService {
   Future<bool> login(
       LoginModel login, NotificationService notificationService) async {
+    StorageService storageService = StorageService();
+
     try {
       Response response = await dio.post("/auth/signin", data: login);
       TokenModel token = TokenModel.fromJson(response.data);
 
-      StorageService storageService = StorageService();
       storageService.clearAll();
       storageService.saveToken(token.acessToken);
+      await storageService.reload();
 
       CalendarService calendarService = new CalendarService();
       CalendarModel calendarModel = await calendarService.getCalendar(
@@ -30,16 +32,22 @@ class LoginService extends DioService {
       }
 
       storageService.reload();
-    } catch (error) {
+    } on Exception catch (error) {
+      storageService.clearAll();
+      storageService.reload();
+
       return false;
     }
 
     return true;
   }
 
-  void logOff() {
+  void logOff() async {
     StorageService storageSerivice = new StorageService();
     storageSerivice.clearAll();
+    await storageSerivice.reload();
+    NotificationService notificationService = new NotificationService();
+    await notificationService.clearAll();
   }
 
   bool loged() {

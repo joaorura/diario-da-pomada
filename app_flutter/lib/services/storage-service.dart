@@ -2,20 +2,26 @@ import 'dart:convert';
 
 import 'package:app_flutter/main.dart';
 import 'package:app_flutter/models/calendar-model.dart';
+import 'package:app_flutter/models/token-model.dart';
 import 'package:flutter/material.dart';
+
+String tokenDefault;
 
 class StorageService {
   static const TimeOfDay _defaultTimeNotifcation =
       TimeOfDay(hour: 9, minute: 0);
 
   String getToken() {
-    String token = prefs.getString('token');
+    if (tokenDefault == null) {
+      tokenDefault = prefs.getString('token');
+    }
 
-    return token;
+    return tokenDefault;
   }
 
   void saveToken(String token) {
     prefs.setString('token', token);
+    tokenDefault = token;
   }
 
   void setTimeNotification(int hour, int minute) {

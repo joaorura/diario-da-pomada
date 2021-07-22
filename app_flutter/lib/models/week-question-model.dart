@@ -33,6 +33,9 @@ class WeekQuestionModel {
   static const String _otherDefault = "outr";
 
   bool containsOther(String text) {
+    if (text == null) {
+      return false;
+    }
     return text.toLowerCase().contains(_otherDefault);
   }
 
@@ -51,6 +54,33 @@ class WeekQuestionModel {
       tipoCorResiduoCalcinha = outroTipoCorResiduoCalcinha;
       outroTipoCorResiduoCalcinha = null;
     }
+  }
+
+  bool validate() {
+    return !(dificuldadeIntroducao == null ||
+        aplicouDormirSexo == null ||
+        sentiuIncomodo == null ||
+        (sentiuIncomodo != null &&
+            sentiuIncomodo == true &&
+            tipoIncomodo == null) ||
+        tipoSujeiraCalcinha == null ||
+        tipoCorResiduoCalcinha == null ||
+        sanguePresente == null ||
+        dificuldadeSexo == null ||
+        (dificuldadeSexo != null &&
+            dificuldadeSexo == true &&
+            tipoDificuldadeSexo == null) ||
+        menstruouRecentemente == null ||
+        (menstruouRecentemente != null &&
+            menstruouRecentemente == true &&
+            dataMenstruacao == null) ||
+        mestruacaoIgualAnterior == null ||
+        (mestruacaoIgualAnterior != null &&
+            mestruacaoIgualAnterior == false &&
+            tipoMestruacaoDiferente == null) ||
+        parouUso == null ||
+        (parouUso != null && parouUso == true && motivoParadaUso == null) ||
+        dataAtual == null);
   }
 
   WeekQuestionModel();

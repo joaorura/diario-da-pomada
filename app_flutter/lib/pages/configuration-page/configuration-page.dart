@@ -1,6 +1,6 @@
-import 'package:app_flutter/login-page/login-page.dart';
-import 'package:app_flutter/login-page/sigup-page.dart';
-import 'package:app_flutter/notifications-page/notifications-page.dart';
+import 'package:app_flutter/pages/login-page/login-page.dart';
+import 'package:app_flutter/pages/login-page/sigup-page.dart';
+import 'package:app_flutter/pages/notifications-page/notifications-page.dart';
 import 'package:app_flutter/services/login-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
 import 'package:app_flutter/utils/utils.dart';

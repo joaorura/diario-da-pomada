@@ -1,11 +1,11 @@
-import 'package:app_flutter/first-carousel/text-carousel.dart';
-import 'package:app_flutter/first-carousel/title-carousel.dart';
-import 'package:app_flutter/login-page/login-page.dart';
+import 'package:app_flutter/pages/first-carousel/text-carousel.dart';
+import 'package:app_flutter/pages/first-carousel/title-carousel.dart';
+import 'package:app_flutter/pages/login-page/login-page.dart';
 import 'package:app_flutter/services/notification-service.dart';
 import 'package:app_flutter/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:app_flutter/first-carousel/list-white-dot.dart';
+import 'package:app_flutter/pages/first-carousel/list-white-dot.dart';
 
 class FirstCarousel extends StatefulWidget {
   final NotificationService notificationService;

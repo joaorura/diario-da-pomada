@@ -1,5 +1,5 @@
-import 'package:app_flutter/calendar-page/calendar-page.dart';
-import 'package:app_flutter/login-page/button-camp.dart';
+import 'package:app_flutter/pages/calendar-page/calendar-page.dart';
+import 'package:app_flutter/pages/login-page/button-camp.dart';
 import 'package:app_flutter/models/daily-question-model.dart';
 import 'package:app_flutter/services/daily-question-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
@@ -22,14 +22,15 @@ class _DailyPageState extends State<DailyPage> {
   final _formKey = GlobalKey<FormState>();
 
   void sendForm() async {
-    Form.of(_formKey.currentContext).save();
-
     DailyQuestionService dailyQuestionService = DailyQuestionService();
     _dailyQuestionModel.dataAtual = DateTime.now();
     if (await dailyQuestionService.save(_dailyQuestionModel)) {
+      showSnackBar(context, "Questões enviadas!");
       goPageWithoutBack(
           context, () => CalendarPage(widget.notificationService));
-    } else {}
+    } else {
+      showSnackBar(context, "Falha ao enviar questões");
+    }
   }
 
   @override
@@ -40,8 +41,9 @@ class _DailyPageState extends State<DailyPage> {
         onChanged: () {
           Form.of(primaryFocus.context).save();
         },
-        child: Column(
-            children: [
+        child: SingleChildScrollView(
+            child: Column(
+                children: [
               Column(
                 children: [
                   Container(
@@ -56,8 +58,11 @@ class _DailyPageState extends State<DailyPage> {
                   RadioListTile<bool>(
                       value: true,
                       groupValue: _dailyQuestionModel.usouPomada,
-                      onChanged: (value) =>
-                          _dailyQuestionModel.usouPomada = value,
+                      onChanged: (value) {
+                        setState(() {
+                          _dailyQuestionModel.usouPomada = value;
+                        });
+                      },
                       title: Text('Sim',
                           style: GoogleFonts.notoSans(
                               color: Colors.black,
@@ -66,8 +71,11 @@ class _DailyPageState extends State<DailyPage> {
                   RadioListTile<bool>(
                       value: false,
                       groupValue: _dailyQuestionModel.usouPomada,
-                      onChanged: (value) =>
-                          _dailyQuestionModel.usouPomada = value,
+                      onChanged: (value) {
+                        setState(() {
+                          _dailyQuestionModel.usouPomada = value;
+                        });
+                      },
                       title: Text('Não',
                           style: GoogleFonts.notoSans(
                               color: Colors.black,
@@ -102,9 +110,9 @@ class _DailyPageState extends State<DailyPage> {
               Container(
                   width: MediaQuery.of(context).size.width,
                   child: ButtonCamp(
-                      theText: "Confirmar Cadastro", onPressed: sendForm))
+                      theText: "Enviar Questões", onPressed: sendForm))
             ],
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center));
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center)));
   }
 }

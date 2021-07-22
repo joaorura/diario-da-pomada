@@ -1,5 +1,5 @@
-import 'package:app_flutter/calendar-page/daily-page.dart';
-import 'package:app_flutter/calendar-page/week-page.dart';
+import 'package:app_flutter/pages/calendar-page/daily-page.dart';
+import 'package:app_flutter/pages/calendar-page/weekly-page.dart';
 import 'package:app_flutter/models/calendar-model.dart';
 import 'package:app_flutter/services/calendar-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
@@ -47,18 +47,18 @@ class _CalendarPageState extends State<CalendarPage> {
     typeDay = typeDay.toLowerCase();
 
     switch (typeDay) {
-      case 'acompanhamento':
+      case 'daily':
         goPageWithBack(
             context,
             () => MaterialAppCustom(
                 DailyPage(widget.notificationService), 'Acompanhamento'))();
         break;
 
-      case 'semanal':
+      case 'weekly':
         goPageWithBack(
             context,
             () => MaterialAppCustom(
-                WeekPage(widget.notificationService), 'Semanal'))();
+                WeeklyPage(widget.notificationService), 'Semanal'))();
         break;
 
       default:
@@ -68,7 +68,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Widget buildFuture(BuildContext context, AsyncSnapshot<CalendarModel> data) {
     if (data.data.erro) {
-      showSnackBar(context, "Erro de conexão.");
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => showSnackBar(context, "Erro de conexão."));
     }
 
     return TableCalendar(
@@ -115,7 +116,7 @@ class _CalendarPageState extends State<CalendarPage> {
         notificationService: widget.notificationService);
     return FutureBuilder(
         future: futureCalendarModel,
-        initialData: CalendarModel(null, null, false),
+        initialData: CalendarModel(null, null, false, erro: false),
         builder: buildFuture);
   }
 }

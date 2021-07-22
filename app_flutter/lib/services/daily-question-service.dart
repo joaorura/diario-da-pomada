@@ -6,7 +6,7 @@ class DailyQuestionService extends DioService {
     try {
       await dio.post('/daily', data: answers);
       return true;
-    } catch (error) {
+    } on Exception catch (error) {
       return false;
     }
   }

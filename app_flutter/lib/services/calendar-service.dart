@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_flutter/models/calendar-model.dart';
 import 'package:app_flutter/models/date-model.dart';
 import 'package:app_flutter/services/dio-service.dart';
@@ -16,15 +18,13 @@ class CalendarService extends DioService {
       Response response =
           await dio.post("/calendary", data: DateNowModel(DateTime.now()));
       result = CalendarModel.fromJson(response.data);
-
-      storageService.setCalendar(response.data);
+      storageService.setCalendar(jsonEncode(response.data));
 
       if (notificationService != null &&
-          (result.newCalendar ||
-              (attNotifications != null && attNotifications))) {
+          (result.isNew || (attNotifications != null && attNotifications))) {
         notificationService.attNotifications(calendarModel: result);
       }
-    } catch (error) {
+    } on Exception catch (error) {
       result = storageService.getCalendar();
       result.erro = true;
     }
