@@ -18,15 +18,15 @@ export class AuthService {
     }
 
     signin(user: User) {
-        return this.createNewAccessToken({ username: user.email, sub: user._id });
+        return this.createNewAccessToken({ sub: user._id });
     }
 
     async signup(body: CreateUser) {
         const user = await this.userService.create(body);
-        return this.createNewAccessToken({ username: user.email, sub: user._id });
+        return this.createNewAccessToken({ sub: user._id });
     }
 
-    findUserByUsername(username: string) {
-        return this.userService.findByUsername(username);
+    findUserById(id: string) {
+        return this.userService.findById(id);
     }
 }

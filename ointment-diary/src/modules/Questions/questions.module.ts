@@ -1,4 +1,5 @@
 import { DailyQuestion, DailyQuestionSchema, WeeklyQuestion, WeeklyQuestionSchema } from './questions.entity';
+import { CalendaryModule } from '../Calendary/calendary.module';
 import { QuestionsController } from './questions.controller';
 import { QuestionsService } from './questions.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -17,6 +18,6 @@ const DailyQuestionFeature = {
 @Module({
     providers: [QuestionsService],
     controllers: [QuestionsController],
-    imports: [MongooseModule.forFeature([WeeklyQuestionFeature, DailyQuestionFeature])],
+    imports: [CalendaryModule, MongooseModule.forFeature([WeeklyQuestionFeature, DailyQuestionFeature])],
 })
 export class QuestionsModule {}

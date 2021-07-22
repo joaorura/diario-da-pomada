@@ -44,6 +44,34 @@ export class CalendaryService {
         return null;
     }
 
+    async findAndRemoveWeeklyDateById(userId, date: Date) {
+        const finded = await this.calendaryModel.findOne({ userId }).catch((e) => {
+            throw new InternalServerErrorException(e.message);
+        });
+
+        finded.weekly.forEach((weeklyDate, index) => {
+            if (moment(date).isSame(weeklyDate)) {
+                finded.weekly.splice(index, 1);
+            }
+        });
+
+        finded.save();
+    }
+
+    async findAndRemoveDailyDateById(userId, date: Date) {
+        const finded = await this.calendaryModel.findOne({ userId }).catch((e) => {
+            throw new InternalServerErrorException(e.message);
+        });
+
+        finded.daily.forEach((dailyDate, index) => {
+            if (moment(date).isSame(dailyDate)) {
+                finded.daily.splice(index, 1);
+            }
+        });
+
+        finded.save();
+    }
+
     private createCalendary(currentDate: Date) {
         const curr = moment(currentDate).add(1, 'day');
         const format = 'YYYY-MM-DD';

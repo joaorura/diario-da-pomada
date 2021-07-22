@@ -6,12 +6,12 @@ export class WeeklyQuestion {
     _id: string;
     @Prop() createdAt?: Date;
     @Prop() updatedAt?: Date;
-    @Prop() tipoIncomodo: string;
-    @Prop() motivoParadaUso: string;
-    @Prop() tipoSujeiraCalcinha: string;
-    @Prop() tipoDificuldadeSexo: string;
-    @Prop() tipoCorResiduoCalcinha: string;
-    @Prop() tipoMestruacaoDiferente: string;
+    @Prop({ default: null }) tipoIncomodo: string;
+    @Prop({ default: null }) motivoParadaUso: string;
+    @Prop({ default: null }) tipoSujeiraCalcinha: string;
+    @Prop({ default: null }) tipoDificuldadeSexo: string;
+    @Prop({ default: null }) tipoCorResiduoCalcinha: string;
+    @Prop({ default: null }) tipoMestruacaoDiferente: string;
     @Prop({ required: true }) parouUso: boolean;
     @Prop({ required: true }) dataDeMarcacao: Date;
     @Prop({ required: true }) dataMenstruacao: Date;
@@ -31,8 +31,8 @@ export class DailyQuestion {
     _id: string;
     @Prop() createdAt?: Date;
     @Prop() updatedAt?: Date;
-    @Prop() motivoNaoUsar: string;
     @Prop({ required: true }) usouPomada: boolean;
+    @Prop({ default: null }) motivoNaoUsar: string;
     @Prop({ required: true }) dataDeMarcacao: Date;
     @Prop({ required: true }) dataDePreenchimento: Date;
     @Prop({ required: true, type: SchemaMongoose.Types.ObjectId }) userId: string;
