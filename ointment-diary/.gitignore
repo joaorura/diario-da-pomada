@@ -37,3 +37,4 @@ lerna-debug.log*
 public.pem
 private.pem
 .env.development
+package-lock.json
