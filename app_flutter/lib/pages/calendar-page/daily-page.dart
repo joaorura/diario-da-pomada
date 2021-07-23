@@ -64,6 +64,7 @@ class _DailyPageState extends State<DailyPage> {
                       onChanged: (value) {
                         setState(() {
                           _dailyQuestionModel.usouPomada = value;
+                          _dailyQuestionModel.motivoNaoUsar = null;
                         });
                       },
                       title: Text('Sim',
@@ -89,8 +90,11 @@ class _DailyPageState extends State<DailyPage> {
                       ? Container()
                       : Container(
                           child: TextField(
-                            onChanged: (value) =>
-                                _dailyQuestionModel.motivoNaoUsar = value,
+                            onChanged: (value) {
+                              setState(() {
+                                _dailyQuestionModel.motivoNaoUsar = value;
+                              });
+                            },
                             decoration: InputDecoration(
                               hintText:
                                   "Qual foi o motivo, para não ter usado?",

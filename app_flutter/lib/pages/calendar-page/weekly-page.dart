@@ -167,6 +167,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
                     onChanged: (value) {
                       setState(() {
                         _weekQuestionModel.sentiuIncomodo = value;
+                        _weekQuestionModel.tipoIncomodo = null;
                       });
                     },
                     title: Text('Não',
@@ -538,6 +539,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
                     onChanged: (value) {
                       setState(() {
                         _weekQuestionModel.dificuldadeSexo = value;
+                        _weekQuestionModel.tipoDificuldadeSexo = null;
                       });
                     },
                     title: Text('Não',
@@ -602,6 +604,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
                     onChanged: (value) {
                       setState(() {
                         _weekQuestionModel.menstruouRecentemente = value;
+                        _weekQuestionModel.dataMenstruacao = null;
                       });
                     },
                     title: Text('Não',
@@ -628,7 +631,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
                     : Container(
                         margin: EdgeInsets.only(left: 50, right: 40),
                         child: DateTimeFormField(
-                          onSaved: (value) {
+                          onDateSelected: (value) {
                             setState(() {
                               _weekQuestionModel.dataMenstruacao = value;
                             });
@@ -675,6 +678,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
                     onChanged: (value) {
                       setState(() {
                         _weekQuestionModel.mestruacaoIgualAnterior = value;
+                        _weekQuestionModel.tipoMestruacaoDiferente = null;
                       });
                     },
                     title: Text('Sim',
@@ -740,6 +744,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
                     onChanged: (value) {
                       setState(() {
                         _weekQuestionModel.parouUso = value;
+                        _weekQuestionModel.motivoParadaUso = null;
                       });
                     },
                     title: Text('Não',
