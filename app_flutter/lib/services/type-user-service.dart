@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 class TypeUserService extends DioService {
   Future<TypeUserModel> getTypeUser() async {
     try {
-      Response response = await dio.get("/user/type");
+      Response response = await dio.get("/user/role");
       TypeUserModel result = TypeUserModel.fromJson(response.data);
       return result;
     } on Exception catch (erro) {

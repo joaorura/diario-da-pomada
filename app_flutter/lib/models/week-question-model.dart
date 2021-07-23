@@ -97,7 +97,9 @@ class WeekQuestionModel {
         "dificuldadeSexo": dificuldadeSexo,
         "tipoDificuldadeSexo": tipoDificuldadeSexo,
         "menstruouRecentemente": menstruouRecentemente,
-        "dataMenstruacao": DateFormat('yyyy-MM-dd').format(dataMenstruacao),
+        "dataMenstruacao": dataMenstruacao == null
+            ? null
+            : DateFormat('yyyy-MM-dd').format(dataMenstruacao),
         "mestruacaoIgualAnterior": mestruacaoIgualAnterior,
         "tipoMestruacaoDiferente": tipoMestruacaoDiferente,
         "parouUso": parouUso,

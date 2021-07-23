@@ -44,9 +44,7 @@ class _CalendarPageState extends State<CalendarPage> {
       typeDay = holidayDay;
     }
 
-    if (DateTime.now().isBefore(day)) {
-      return;
-    }
+    if (DateTime.now().isBefore(day)) {}
 
     typeDay = typeDay.toLowerCase();
 

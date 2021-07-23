@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 
 class DefaultPage extends StatefulWidget {
   final NotificationService notificationService;
-  DefaultPage(this.notificationService, {Key key}) : super(key: key);
+  final int page;
+
+  DefaultPage(this.notificationService, {Key key, this.page}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DefaultPage();
@@ -16,22 +18,20 @@ class DefaultPage extends StatefulWidget {
 
 class _DefaultPage extends State<DefaultPage> {
   Widget bodyChild;
-  int _selectedIndex = 1;
+  int _selectedIndex;
 
   void initState() {
-    super.initState();
-    this.bodyChild = CalendarPage(widget.notificationService);
-    this._selectedIndex = 1;
-  }
-
-  void _onItemTapped(int index) {
-    if (this._selectedIndex == index) {
-      return;
+    if (widget.page != null && widget.page < 4) {
+      _selectedIndex = widget.page;
+    } else {
+      _selectedIndex = 1;
     }
 
-    this.setState(() {
-      this._selectedIndex = index;
-    });
+    super.initState();
+    _changeBody(_selectedIndex);
+  }
+
+  void _changeBody(int index) {
     switch (index) {
       case 0:
         this.setState(() {
@@ -56,6 +56,18 @@ class _DefaultPage extends State<DefaultPage> {
       default:
         break;
     }
+  }
+
+  void _onItemTapped(int index) {
+    if (this._selectedIndex == index) {
+      return;
+    }
+
+    this.setState(() {
+      this._selectedIndex = index;
+    });
+
+    _changeBody(index);
   }
 
   @override

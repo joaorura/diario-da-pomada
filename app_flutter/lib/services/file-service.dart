@@ -2,17 +2,16 @@ import 'dart:io';
 
 import 'dart:typed_data';
 
-import 'package:downloads_path_provider/downloads_path_provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class FileService {
   Future<String> _nameFile(String name) async {
-    Directory tempDir = await DownloadsPathProvider.downloadsDirectory;
-    String tempPath = tempDir.path;
+    String tempPath = (await getExternalStorageDirectory()).path;
     return tempPath + '/$name';
   }
 
-  Future<File> writeFileByte(Uint8List data, String name) async {
+  Future<void> writeFileByte(Uint8List data, String name) async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       await Permission.storage.request();
@@ -26,14 +25,19 @@ class FileService {
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
-  Future<File> writeFileString(String data, String name) async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
+  Future<void> writeFileString(String data, String name) async {
+    var status = await Permission.manageExternalStorage.status;
+    var otherStatus = await Permission.storage.status;
+
+    if (status.isDenied) {
+      await Permission.manageExternalStorage.request();
+    }
+
+    if (otherStatus.isDenied) {
       await Permission.storage.request();
     }
 
     String filePath = await _nameFile(name);
-
-    return File(filePath).writeAsString(data);
+    File(filePath).writeAsStringSync(data);
   }
 }

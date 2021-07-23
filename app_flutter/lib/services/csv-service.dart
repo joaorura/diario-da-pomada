@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 class CsvService extends DioService {
   Future<CsvModel> getCsv() async {
     try {
-      Response response = await dio.get("/csv");
+      Response response = await dio.get("/reports/general");
       CsvModel result = CsvModel.fromJson(response.data);
 
       return result;

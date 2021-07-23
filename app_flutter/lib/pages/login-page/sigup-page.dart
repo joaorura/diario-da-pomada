@@ -81,7 +81,7 @@ class _SignupPageState extends State<SignupPage> {
       if (await service.attUser(_data)) {
         showSnackBar(context, "Cadastro atualizado.");
         goPageWithoutBack(
-            context, () => ConfigurationPage(widget.notificationService))();
+            context, () => DefaultPage(widget.notificationService, page: 3))();
       } else {
         showSnackBar(context, "Falha ao atualizar o cadastro.");
       }
