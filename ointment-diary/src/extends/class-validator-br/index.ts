@@ -1,4 +1,5 @@
 export * from './decorators/IsNumberString';
+export * from './decorators/IsDateOnlyNull';
 export * from './decorators/IsStringNull';
 export * from './decorators/IsPositive';
 export * from './decorators/IsNotEmpty';

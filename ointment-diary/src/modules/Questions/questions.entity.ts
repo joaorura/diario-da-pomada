@@ -14,7 +14,7 @@ export class WeeklyQuestion {
     @Prop({ default: null }) tipoMestruacaoDiferente: string;
     @Prop({ required: true }) parouUso: boolean;
     @Prop({ required: true }) dataDeMarcacao: Date;
-    @Prop({ required: true }) dataMenstruacao: Date;
+    @Prop({ default: null }) dataMenstruacao: Date;
     @Prop({ required: true }) sentiuIncomodo: boolean;
     @Prop({ required: true }) sanguePresente: boolean;
     @Prop({ required: true }) dificuldadeSexo: boolean;

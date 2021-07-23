@@ -88,6 +88,7 @@ export class CalendaryService {
 
                 if (i == 7) {
                     weekly.push(date);
+                    daily.pop();
                     dueDate = date;
                 }
             }
