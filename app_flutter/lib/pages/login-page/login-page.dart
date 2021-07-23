@@ -8,6 +8,7 @@ import 'package:app_flutter/models/login-model.dart';
 import 'package:app_flutter/services/login-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
 import 'package:app_flutter/utils/utils.dart';
+import 'package:cpfcnpj/cpfcnpj.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -68,21 +69,25 @@ class _LoginPage extends State<LoginPage> {
           },
           child: Column(children: [
             CampText(
-              "Email",
-              (String email) {
-                _loginModel.email = email;
+              "CPF, Email ou Cartão do SUS",
+              (String login) {
+                _loginModel.login = login;
               },
               inputs: [new LengthLimitingTextInputFormatter(128)],
               validate: (value) {
-                if (RegExp(
+                bool email = RegExp(
                         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                    .hasMatch(value)) {
+                    .hasMatch(value);
+                bool sus = RegExp(r"^[0-9]{15,15}").hasMatch(value);
+                bool cpf = CPF.isValid(value);
+
+                if (email || sus || cpf) {
                   return null;
                 } else {
-                  return 'Email não nos conformes.';
+                  return 'Login inválido';
                 }
               },
-              dataCamp: _loginModel.email,
+              dataCamp: _loginModel.login,
             ),
             Container(
               child: Column(
@@ -92,12 +97,13 @@ class _LoginPage extends State<LoginPage> {
                     (String password) => _loginModel.password = password,
                     inputs: [new LengthLimitingTextInputFormatter(128)],
                     validate: (value) {
-                      if (RegExp(
-                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                          .hasMatch(value)) {
+                      if (value.contains(" ")) {
+                        return "Não pode ter espaços em branco.";
+                      }
+                      if (value.length > 3) {
                         return null;
                       } else {
-                        return 'Senha não nos conformes.';
+                        return 'Senha precisa ter no mínimo 4 letras.';
                       }
                     },
                     dataCamp: _loginModel.password,

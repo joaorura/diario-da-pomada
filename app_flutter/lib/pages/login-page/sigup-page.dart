@@ -65,6 +65,14 @@ class _SignupPageState extends State<SignupPage> {
 
   void sendForm() async {
     if (_formKey.currentState.validate()) {
+      if (_data.email == "") {
+        _data.email = null;
+      }
+
+      if (_data.nationalCard == "") {
+        _data.nationalCard = null;
+      }
+
       SignupService service = new SignupService();
       if (await service.signUp(_data)) {
         goPageWithoutBack(
@@ -77,6 +85,14 @@ class _SignupPageState extends State<SignupPage> {
 
   void sendFormAtt() async {
     if (_formKey.currentState.validate()) {
+      if (_data.email == "") {
+        _data.email = null;
+      }
+
+      if (_data.nationalCard == "") {
+        _data.nationalCard = null;
+      }
+
       SignupService service = new SignupService();
       if (await service.attUser(_data)) {
         showSnackBar(context, "Cadastro atualizado.");
@@ -117,15 +133,16 @@ class _SignupPageState extends State<SignupPage> {
           (String password) => _data.password = password,
           inputs: [new LengthLimitingTextInputFormatter(128)],
           validate: (value) {
-            if (RegExp(
-                    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                .hasMatch(value)) {
-              if (_data.password != _secondPassword) {
-                return "Senhas digitadas não são iguais.";
-              }
+            if (value.contains(" ")) {
+              return "Não pode ter espaços em branco.";
+            }
+            if (_data.password != _secondPassword) {
+              return "Senhas digitadas não são iguais.";
+            }
+            if (value.length > 3) {
               return null;
             } else {
-              return 'Senha não nos conformes.';
+              return 'Senha precisa ter no mínimo 4 letras.';
             }
           },
           dataCamp: _data.password,
@@ -136,15 +153,16 @@ class _SignupPageState extends State<SignupPage> {
           (String password) => _secondPassword = password,
           inputs: [new LengthLimitingTextInputFormatter(128)],
           validate: (value) {
-            if (RegExp(
-                    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                .hasMatch(value)) {
-              if (_data.password != _secondPassword) {
-                return "Senhas digitadas não são iguais.";
-              }
+            if (value.contains(" ")) {
+              return "Não pode ter espaços em branco.";
+            }
+            if (_data.password != _secondPassword) {
+              return "Senhas digitadas não são iguais.";
+            }
+            if (value.length > 3) {
               return null;
             } else {
-              return 'Senha não nos conformes.';
+              return 'Senha precisa ter no mínimo 4 letras.';
             }
           },
           dataCamp: _data.password,
@@ -183,12 +201,16 @@ class _SignupPageState extends State<SignupPage> {
               },
               inputs: [new LengthLimitingTextInputFormatter(128)],
               validate: (value) {
-                if (RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                    .hasMatch(value)) {
+                print(value);
+
+                if (value == null ||
+                    value == "" ||
+                    (value != null &&
+                        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(value))) {
                   return null;
                 } else {
-                  return 'Email não nos conformes.';
+                  return 'Email incorrento.';
                 }
               },
               dataCamp: _data.email,
@@ -240,7 +262,9 @@ class _SignupPageState extends State<SignupPage> {
                 new LengthLimitingTextInputFormatter(11)
               ],
               validate: (value) {
-                if (CPF.isValid(value)) {
+                if (value == null ||
+                    value == "" ||
+                    (value != null && CPF.isValid(value))) {
                   return null;
                 } else {
                   return 'CPF Inválido.';

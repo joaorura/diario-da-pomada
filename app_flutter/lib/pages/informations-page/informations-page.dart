@@ -25,8 +25,8 @@ class InformationsPage extends StatelessWidget {
             " de Alagoas (UFAL), Campus Arapiraca e Maceió, em parceria com pesquisadores da Universidade" +
             " Federal de Pernambuco (UFPE):\n" +
             "\t- Professora Doutoranda Nirliane Ribeiro Barbosa - UFAL\n" +
-            "\t- Professora Doutora e Karol Fireman de Farias - UFAL\n" +
-            "\t- Professora Doutora e Cristiane Araújo Nascimento - UFAL\n" +
+            "\t- Professora Doutora Karol Fireman de Farias - UFAL\n" +
+            "\t- Professora Doutora Cristiane Araújo Nascimento - UFAL\n" +
             "\t- Professora Doutora Teresinha Gonçalves da Silva - UFPE\n" +
             "\t- Acadêmico em Ciências da Computação João Messias Lima Pereira - UFAL\n" +
             "\t- Acadêmico em Ciências da Computação Vitor Barcelos de Cerqueira - UFAL\n"),
@@ -56,7 +56,12 @@ class InformationsPage extends StatelessWidget {
       ));
 
   List<ListTile> _buildItems(BuildContext context, String text) {
-    List<ListTile> list = [ListTile(title: Text(text))];
+    List<ListTile> list = [
+      ListTile(
+          title: Text(
+        text,
+      ))
+    ];
     return list;
   }
 
