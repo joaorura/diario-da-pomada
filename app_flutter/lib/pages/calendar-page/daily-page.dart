@@ -38,88 +38,89 @@ class _DailyPageState extends State<DailyPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        key: _formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        onChanged: () {
-          Form.of(primaryFocus.context).save();
-        },
-        child: SingleChildScrollView(
-            child: Column(
-                children: [
-              Column(
-                children: [
-                  Container(
-                      child: Text(
-                        'Conseguiu usar a pomada',
-                        style: GoogleFonts.notoSans(
-                            color: Colors.black,
-                            fontSize: 22,
-                            decoration: TextDecoration.none),
-                      ),
-                      margin: EdgeInsets.only(top: 20, bottom: 20)),
-                  RadioListTile<bool>(
-                      value: true,
-                      groupValue: _dailyQuestionModel.usouPomada,
-                      onChanged: (value) {
-                        setState(() {
-                          _dailyQuestionModel.usouPomada = value;
-                          _dailyQuestionModel.motivoNaoUsar = null;
-                        });
-                      },
-                      title: Text('Sim',
-                          style: GoogleFonts.notoSans(
-                              color: Colors.black,
-                              fontSize: 19,
-                              decoration: TextDecoration.none))),
-                  RadioListTile<bool>(
-                      value: false,
-                      groupValue: _dailyQuestionModel.usouPomada,
-                      onChanged: (value) {
-                        setState(() {
-                          _dailyQuestionModel.usouPomada = value;
-                        });
-                      },
-                      title: Text('Não, qual o motivo?',
-                          style: GoogleFonts.notoSans(
-                              color: Colors.black,
-                              fontSize: 19,
-                              decoration: TextDecoration.none))),
-                  (_dailyQuestionModel.usouPomada == null ||
-                          _dailyQuestionModel.usouPomada
-                      ? Container()
-                      : Container(
-                          child: TextField(
-                            onChanged: (value) {
-                              setState(() {
-                                _dailyQuestionModel.motivoNaoUsar = value;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              hintText:
-                                  "Qual foi o motivo, para não ter usado?",
-                              hintStyle: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black),
-                              enabledBorder: new UnderlineInputBorder(
-                                  borderSide:
-                                      new BorderSide(color: Colors.grey)),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.pink),
-                              ),
-                            ),
+    return SingleChildScrollView(
+        child: Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: () {
+              Form.of(primaryFocus.context).save();
+            },
+            child: Container(
+                child: Column(
+                    children: [
+                  Column(
+                    children: [
+                      Container(
+                          child: Text(
+                            'Conseguiu usar a pomada',
+                            style: GoogleFonts.notoSans(
+                                color: Colors.black,
+                                fontSize: 22,
+                                decoration: TextDecoration.none),
                           ),
-                          margin: EdgeInsets.only(left: 40, right: 40)))
+                          margin: EdgeInsets.only(top: 20, bottom: 20)),
+                      RadioListTile<bool>(
+                          value: true,
+                          groupValue: _dailyQuestionModel.usouPomada,
+                          onChanged: (value) {
+                            setState(() {
+                              _dailyQuestionModel.usouPomada = value;
+                              _dailyQuestionModel.motivoNaoUsar = null;
+                            });
+                          },
+                          title: Text('Sim',
+                              style: GoogleFonts.notoSans(
+                                  color: Colors.black,
+                                  fontSize: 19,
+                                  decoration: TextDecoration.none))),
+                      RadioListTile<bool>(
+                          value: false,
+                          groupValue: _dailyQuestionModel.usouPomada,
+                          onChanged: (value) {
+                            setState(() {
+                              _dailyQuestionModel.usouPomada = value;
+                            });
+                          },
+                          title: Text('Não, qual o motivo?',
+                              style: GoogleFonts.notoSans(
+                                  color: Colors.black,
+                                  fontSize: 19,
+                                  decoration: TextDecoration.none))),
+                      (_dailyQuestionModel.usouPomada == null ||
+                              _dailyQuestionModel.usouPomada
+                          ? Container()
+                          : Container(
+                              child: TextField(
+                                onChanged: (value) {
+                                  setState(() {
+                                    _dailyQuestionModel.motivoNaoUsar = value;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  hintText:
+                                      "Qual foi o motivo, para não ter usado?",
+                                  hintStyle: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black),
+                                  enabledBorder: new UnderlineInputBorder(
+                                      borderSide:
+                                          new BorderSide(color: Colors.grey)),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.pink),
+                                  ),
+                                ),
+                              ),
+                              margin: EdgeInsets.only(left: 40, right: 40)))
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                  ),
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: ButtonCamp(
+                          theText: "Enviar Questões", onPressed: sendForm))
                 ],
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-              ),
-              Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: ButtonCamp(
-                      theText: "Enviar Questões", onPressed: sendForm))
-            ],
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center)));
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center))));
   }
 }

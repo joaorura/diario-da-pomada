@@ -84,7 +84,8 @@ class _App extends State<App> {
         primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Scaffold(body: SafeArea(top: false, child: this.home)),
+      home:
+          Scaffold(body: SafeArea(top: false, bottom: false, child: this.home)),
     );
   }
 }

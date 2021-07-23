@@ -19,14 +19,12 @@ class _BasePage extends State<BasePage> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          color: Colors.pink.withAlpha(90),
-        ),
-        child:
-            Form(child: ListView(children: [Column(children: this.children)])),
-      ),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            color: Colors.pink.withAlpha(90),
+          ),
+          child: ListView(children: this.children)),
     );
   }
 }
