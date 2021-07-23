@@ -11,6 +11,7 @@ export const IsMongoIdMessage = 'A propriedade $property precisa ser um identifi
 export const MinLengthMessage = 'A propriedade $property precisar possuir $constraint1 ou mais caracteres.';
 export const MaxLengthMessage = 'A propriedade $property precisar possuir $constraint1 ou menos caracteres.';
 export const IsDateOnlyMessage = 'A propriedade $property precisa ser uma data válida no formato YYYY-MM-DD.';
+export const IsDateOnlyNullMessage = 'A propriedade $property precisa ser uma data válida no formato YYYY-MM-DD ou ser nula.';
 export const MaxFileSizeMessage = 'A propriedade $property precisa ser menor ou igual ao tamanho máximo: $constraint1 bytes.';
 export const HasMimeTypeMessage = (mimeTypes: string[]) => {
     return `A propriedade $property precisa ser ${mimeTypes.toString().replace(/,/g, ', ')}.`;

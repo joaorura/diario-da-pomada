@@ -1,10 +1,7 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
-
 export default () => ({
     jwt: {
-        privateKey: readFileSync(join(__dirname, 'private.pem')),
-        publicKey: readFileSync(join(__dirname, 'public.pem')),
+        privateKey: Buffer.from(process.env.PRIVATE_KEY, 'base64').toString('utf-8'),
+        publicKey: Buffer.from(process.env.PUBLIC_KEY, 'base64').toString('utf-8'),
         signOptions: {
             algorithm: 'RS256',
             expiresIn: '30d',

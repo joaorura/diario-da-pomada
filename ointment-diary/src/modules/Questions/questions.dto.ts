@@ -1,15 +1,15 @@
-import { IsBoolean, IsDateOnly, IsNotEmpty, IsStringNull } from 'src/extends/class-validator-br';
+import { IsBoolean, IsDateOnly, IsNotEmpty, IsStringNull, IsDateOnlyNull } from 'src/extends/class-validator-br';
 
 export class CreateWeeklyQuestion {
     @IsStringNull() tipoIncomodo: string;
     @IsStringNull() motivoParadaUso: string;
+    @IsDateOnlyNull() dataMenstruacao: Date;
     @IsStringNull() tipoSujeiraCalcinha: string;
     @IsStringNull() tipoDificuldadeSexo: string;
     @IsStringNull() tipoCorResiduoCalcinha: string;
     @IsStringNull() tipoMestruacaoDiferente: string;
     @IsBoolean() @IsNotEmpty() parouUso: boolean;
     @IsDateOnly() @IsNotEmpty() dataDeMarcacao: Date;
-    @IsDateOnly() @IsNotEmpty() dataMenstruacao: Date;
     @IsBoolean() @IsNotEmpty() sentiuIncomodo: boolean;
     @IsBoolean() @IsNotEmpty() sanguePresente: boolean;
     @IsBoolean() @IsNotEmpty() dificuldadeSexo: boolean;
