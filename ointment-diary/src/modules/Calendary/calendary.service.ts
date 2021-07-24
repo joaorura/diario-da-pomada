@@ -73,7 +73,7 @@ export class CalendaryService {
     }
 
     private createCalendary(currentDate: Date) {
-        const curr = moment(currentDate).add(1, 'day');
+        const curr = moment(currentDate);
         const format = 'YYYY-MM-DD';
         let dueDate: string;
         const weekDays = 7;
