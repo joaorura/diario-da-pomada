@@ -1,9 +1,18 @@
-import { IsEmail, IsString, MinLength, MaxLength, IsNotEmpty, IsDateOnly, FixedLength } from 'src/extends/class-validator-br';
+import {
+    IsString,
+    MinLength,
+    MaxLength,
+    IsNotEmpty,
+    IsDateOnly,
+    IsEmailNull,
+    FixedLength,
+    IsStringNull,
+    FixedLengthNull,
+} from 'src/extends/class-validator-br';
 import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateUser {
-    @IsEmail()
-    @IsNotEmpty()
+    @IsEmailNull()
     email: string;
 
     @IsNotEmpty()
@@ -18,7 +27,7 @@ export class CreateUser {
 
     @IsString()
     @IsNotEmpty()
-    @MinLength(8)
+    @MinLength(4)
     @MaxLength(128)
     password: string;
 
@@ -27,9 +36,8 @@ export class CreateUser {
     @FixedLength(15)
     healthCard: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @FixedLength(11)
+    @IsStringNull()
+    @FixedLengthNull(11)
     nationalCard: string;
 }
 

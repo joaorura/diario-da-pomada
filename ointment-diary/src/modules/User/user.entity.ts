@@ -5,15 +5,15 @@ import bcrypt from 'bcrypt';
 export class User {
     _id: string;
     @Prop({ select: false }) __v?: number;
+    @Prop({ default: null }) email: string;
     @Prop({ select: false }) createdAt?: Date;
     @Prop({ select: false }) updatedAt?: Date;
     @Prop({ required: true }) birthDate: Date;
     @Prop({ required: true }) fullName: string;
-    @Prop({ required: true, unique: true }) email: string;
+    @Prop({ default: null }) nationalCard: string;
     @Prop({ required: true, default: 'user' }) role: string;
     @Prop({ required: true, select: false }) password: string;
     @Prop({ required: true, unique: true }) healthCard: string;
-    @Prop({ required: true, unique: true }) nationalCard: string;
     @Prop({ required: true, default: 0, select: false }) attempts: number;
 }
 
@@ -26,9 +26,16 @@ UserSchema.methods.comparePassword = async function (password: string): Promise<
 
 UserSchema.pre('save', async function (): Promise<void> {
     const self: any = this;
-    await uniqueFieldValidation(self.model('User'), 'nationalCard', self.get('nationalCard'));
+
+    if (self.get('nationalCard') != null) {
+        await uniqueFieldValidation(self.model('User'), 'nationalCard', self.get('nationalCard'));
+    }
+
+    if (self.get('email')) {
+        await uniqueFieldValidation(self.model('User'), 'email', self.get('email'));
+    }
+
     await uniqueFieldValidation(self.model('User'), 'healthCard', self.get('healthCard'));
-    await uniqueFieldValidation(self.model('User'), 'email', self.get('email'));
     if (self.isModified('password')) {
         self.password = await encryption(self.password);
     }
@@ -37,9 +44,16 @@ UserSchema.pre('save', async function (): Promise<void> {
 UserSchema.pre('findByIdAndUpdate', async function (): Promise<void> {
     const self: any = this;
     const document: any = this.getUpdate();
-    await uniqueFieldValidation(self.model, 'nationalCard', document.nationalCard, document.id);
+
+    if (document.nationalCard != null) {
+        await uniqueFieldValidation(self.model, 'nationalCard', document.nationalCard, document.id);
+    }
+
+    if (document.email != null) {
+        await uniqueFieldValidation(self.model, 'email', document.email, document.id);
+    }
+
     await uniqueFieldValidation(self.model, 'healthCard', document.healthCard, document.id);
-    await uniqueFieldValidation(self.model, 'email', document.email, document.id);
     if (document.password) {
         const password = await encryption(document.password);
         this.update({}, { password });
