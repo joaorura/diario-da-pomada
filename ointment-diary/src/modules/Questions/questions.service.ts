@@ -1,6 +1,6 @@
 import { DailyQuestion, DailyQuestionDocument, WeeklyQuestion, WeeklyQuestionDocument } from './questions.entity';
+import { Injectable, InternalServerErrorException, UnprocessableEntityException } from '@nestjs/common';
 import { CreateDailyQuestion, CreateWeeklyQuestion } from './questions.dto';
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { CalendaryService } from '../Calendary/calendary.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -12,6 +12,18 @@ export class QuestionsService {
         @InjectModel(DailyQuestion.name) private readonly dailyQuestionModel: Model<DailyQuestionDocument>,
         private readonly calendaryService: CalendaryService,
     ) {}
+
+    findWeekly(userId: string) {
+        return this.weeklyQuestionModel.find({ userId }).catch((e) => {
+            throw new InternalServerErrorException(e.message);
+        });
+    }
+
+    findDaily(userId: string) {
+        return this.dailyQuestionModel.find({ userId }).catch((e) => {
+            throw new InternalServerErrorException(e.message);
+        });
+    }
 
     createWeekly(userId: string, body: CreateWeeklyQuestion) {
         const weeklyQuestion = Object.assign(body, { userId });

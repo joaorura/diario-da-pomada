@@ -4,7 +4,8 @@
   "watchAssets": true,
   "compilerOptions": {
     "assets": [
-      "**/*.pem"
+      "**/*.pem",
+      "**/*.xlsx"
     ]
   }
 }

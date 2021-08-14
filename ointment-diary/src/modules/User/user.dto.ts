@@ -13,7 +13,7 @@ import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateUser {
     @IsEmailNull()
-    email: string;
+    email?: string;
 
     @IsNotEmpty()
     @IsDateOnly()
@@ -38,7 +38,7 @@ export class CreateUser {
 
     @IsStringNull()
     @FixedLengthNull(11)
-    nationalCard: string;
+    nationalCard?: string;
 }
 
 export class UpdateUser extends PartialType(CreateUser) {}

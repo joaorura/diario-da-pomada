@@ -4,7 +4,7 @@ export default () => ({
         publicKey: Buffer.from(process.env.PUBLIC_KEY, 'base64').toString('utf-8'),
         signOptions: {
             algorithm: 'RS256',
-            expiresIn: '30d',
+            expiresIn: '90d',
         },
     },
 });

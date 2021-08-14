@@ -16,6 +16,7 @@ const DailyQuestionFeature = {
 };
 
 @Module({
+    exports: [QuestionsService],
     providers: [QuestionsService],
     controllers: [QuestionsController],
     imports: [CalendaryModule, MongooseModule.forFeature([WeeklyQuestionFeature, DailyQuestionFeature])],

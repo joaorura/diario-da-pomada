@@ -28,6 +28,12 @@ export class UserService {
         return this.findByUsername(user.email);
     }
 
+    findAllUsersForReports() {
+        return this.userModel.find({ role: 'user' }).catch((e) => {
+            throw new InternalServerErrorException(e.message);
+        });
+    }
+
     async update(user: User, body: UpdateUser) {
         if (Object.values(body).length) {
             await this.userModel.findByIdAndUpdate(user._id, body, { new: true }).catch((e) => {

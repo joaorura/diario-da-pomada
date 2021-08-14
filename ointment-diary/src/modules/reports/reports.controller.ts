@@ -1,6 +1,7 @@
+import { Body, Controller, Get } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { RoleEnum } from '../Auth/role-auth.guard';
-import { Controller, Get } from '@nestjs/common';
+import { GetSpecificReport } from './reports.dto';
 import { Role } from 'src/app.metadata';
 
 @Controller('reports')
@@ -9,7 +10,13 @@ export class ReportsController {
 
     @Get('general')
     @Role(RoleEnum.Admin)
-    createGeneralReport() {
-        return { report: 'General Report' };
+    async createGeneralReport() {
+        return await this.reportsService.getGeneralReport();
+    }
+
+    @Get('specific')
+    @Role(RoleEnum.Admin)
+    async createSpecificReport(@Body() body: GetSpecificReport) {
+        return await this.reportsService.getSpecificReport(body.healthCard);
     }
 }

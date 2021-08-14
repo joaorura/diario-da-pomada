@@ -2,8 +2,8 @@ import { Injectable, InternalServerErrorException, UnprocessableEntityException 
 import { Calendary, CalendaryDocument } from './calendary.entity';
 import { CreateCalendary, GetCalendary } from './calendary.dto';
 import { InjectModel } from '@nestjs/mongoose';
+import moment from 'moment-timezone';
 import { Model } from 'mongoose';
-import moment from 'moment';
 
 @Injectable()
 export class CalendaryService {
@@ -79,7 +79,7 @@ export class CalendaryService {
         const weekDays = 7;
         const weekly = [];
         const daily = [];
-        const weeks = 6;
+        const weeks = 12;
 
         for (let i = 0; i < weeks; i++) {
             for (let i = 0; i <= weekDays; i++, curr.add(1, 'day')) {
@@ -88,7 +88,6 @@ export class CalendaryService {
 
                 if (i == 7) {
                     weekly.push(date);
-                    daily.pop();
                     dueDate = date;
                 }
             }

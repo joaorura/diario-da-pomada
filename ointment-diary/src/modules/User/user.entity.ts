@@ -5,12 +5,12 @@ import bcrypt from 'bcrypt';
 export class User {
     _id: string;
     @Prop({ select: false }) __v?: number;
-    @Prop({ default: null }) email: string;
+    @Prop({ default: null }) email?: string;
     @Prop({ select: false }) createdAt?: Date;
     @Prop({ select: false }) updatedAt?: Date;
     @Prop({ required: true }) birthDate: Date;
     @Prop({ required: true }) fullName: string;
-    @Prop({ default: null }) nationalCard: string;
+    @Prop({ default: null }) nationalCard?: string;
     @Prop({ required: true, default: 'user' }) role: string;
     @Prop({ required: true, select: false }) password: string;
     @Prop({ required: true, unique: true }) healthCard: string;
