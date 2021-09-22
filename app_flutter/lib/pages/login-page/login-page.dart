@@ -8,16 +8,16 @@ import 'package:app_flutter/models/login-model.dart';
 import 'package:app_flutter/services/login-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
 import 'package:app_flutter/utils/utils.dart';
-import 'package:cpfcnpj/cpfcnpj.dart';
+import 'package:cpf_cnpj_validator/cpf_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class LoginPage extends StatefulWidget {
   final NotificationService notificationService;
-  final LoginModel loginModel;
+  final LoginModel? loginModel;
 
-  LoginPage(this.notificationService, {Key key, this.loginModel})
+  LoginPage(this.notificationService, {Key? key, this.loginModel})
       : super(key: key);
 
   @override
@@ -26,12 +26,12 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  LoginModel _loginModel;
+  LoginModel? _loginModel;
 
   void sendForm() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       LoginService loginService = new LoginService();
-      if (await loginService.login(_loginModel, widget.notificationService)) {
+      if (await loginService.login(_loginModel!, widget.notificationService)) {
         goPageWithoutBack(
             context, () => DefaultPage(widget.notificationService))();
       } else {
@@ -42,8 +42,8 @@ class _LoginPage extends State<LoginPage> {
 
   void initState() {
     if (widget.loginModel == null) {
-      _loginModel = LoginModel();
-      _loginModel.obscure = true;
+      _loginModel = LoginModel(null, null, null);
+      _loginModel!.obscure = true;
     } else {
       _loginModel = widget.loginModel;
     }
@@ -52,7 +52,7 @@ class _LoginPage extends State<LoginPage> {
   }
 
   void _toggle() {
-    _loginModel.obscure = !_loginModel.obscure;
+    _loginModel!.obscure = !(_loginModel!.obscure!);
     goPageWithoutBack(context,
         () => LoginPage(widget.notificationService, loginModel: _loginModel))();
   }
@@ -65,21 +65,21 @@ class _LoginPage extends State<LoginPage> {
           key: _formKey,
           autovalidateMode: AutovalidateMode.always,
           onChanged: () {
-            Form.of(primaryFocus.context).save();
+            Form.of(primaryFocus!.context as BuildContext)!.save();
           },
           child: Column(children: [
             CampText(
               "CPF, Email ou Cartão do SUS",
-              (String login) {
-                _loginModel.login = login;
+              (String? login) {
+                _loginModel!.login = login;
               },
               inputs: [new LengthLimitingTextInputFormatter(128)],
               validate: (value) {
                 bool email = RegExp(
                         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                    .hasMatch(value);
+                    .hasMatch(value!);
                 bool sus = RegExp(r"^[0-9]{15,15}").hasMatch(value);
-                bool cpf = CPF.isValid(value);
+                bool cpf = CPFValidator.isValid(value);
 
                 if (email || sus || cpf) {
                   return null;
@@ -87,17 +87,17 @@ class _LoginPage extends State<LoginPage> {
                   return 'Login inválido';
                 }
               },
-              dataCamp: _loginModel.login,
+              dataCamp: _loginModel!.login,
             ),
             Container(
               child: Column(
                 children: [
                   CampText(
                     "Senha",
-                    (String password) => _loginModel.password = password,
+                    (String? password) => _loginModel!.password = password,
                     inputs: [new LengthLimitingTextInputFormatter(128)],
                     validate: (value) {
-                      if (value.contains(" ")) {
+                      if (value!.contains(" ")) {
                         return "Não pode ter espaços em branco.";
                       }
                       if (value.length > 3) {
@@ -106,16 +106,16 @@ class _LoginPage extends State<LoginPage> {
                         return 'Senha precisa ter no mínimo 4 letras.';
                       }
                     },
-                    dataCamp: _loginModel.password,
+                    dataCamp: _loginModel!.password,
                     icon: Padding(
                         padding: const EdgeInsets.only(top: 15.0),
                         child: const Icon(Icons.lock)),
-                    obcure: _loginModel.obscure,
+                    obcure: _loginModel!.obscure,
                   ),
                   TextButton(
                       onPressed: _toggle,
                       child: new Text(
-                          _loginModel.obscure ? "Exibir" : "Esconder",
+                          _loginModel!.obscure! ? "Exibir" : "Esconder",
                           style: TextStyle(color: Colors.white)))
                 ],
               ),

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TitleCarousel extends StatefulWidget {
-  final String text;
+  final String? text;
 
-  TitleCarousel({Key key, this.text}) : super(key: key);
+  TitleCarousel({Key? key, this.text}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _TitleCarousel(this.text);
+  State<StatefulWidget> createState() => _TitleCarousel(this.text!);
 }
 
 class _TitleCarousel extends State<TitleCarousel> {

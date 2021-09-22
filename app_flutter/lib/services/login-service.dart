@@ -10,10 +10,14 @@ import 'package:dio/dio.dart';
 class LoginService extends DioService {
   Future<bool> login(
       LoginModel login, NotificationService notificationService) async {
+    if (tokenUnset) {
+      await loadAuthentication();
+    }
+
     StorageService storageService = StorageService();
 
     try {
-      Response response = await dio.post("/auth/signin", data: login);
+      Response response = await dio!.post("/auth/signin", data: login);
       TokenModel token = TokenModel.fromJson(response.data);
 
       storageService.clearAll();
@@ -32,7 +36,7 @@ class LoginService extends DioService {
       }
 
       storageService.reload();
-    } on Exception catch (error) {
+    } on Exception catch (_) {
       storageService.clearAll();
       storageService.reload();
 
@@ -42,7 +46,11 @@ class LoginService extends DioService {
     return true;
   }
 
-  void logOff() async {
+  Future<void> logOff() async {
+    if (tokenUnset) {
+      await loadAuthentication();
+    }
+
     StorageService storageSerivice = new StorageService();
     storageSerivice.clearAll();
     await storageSerivice.reload();
@@ -50,10 +58,14 @@ class LoginService extends DioService {
     await notificationService.clearAll();
   }
 
-  bool loged() {
+  Future<bool> loged() async {
+    if (tokenUnset) {
+      await loadAuthentication();
+    }
+
     StorageService storageService = new StorageService();
 
-    String token = storageService.getToken();
+    String? token = await storageService.getToken();
 
     if (token == null) {
       return false;

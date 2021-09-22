@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BasePage extends StatefulWidget {
-  final List<Widget> children;
+  final List<Widget>? children;
 
-  BasePage({Key key, this.children}) : super(key: key);
+  BasePage({Key? key, this.children}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _BasePage(this.children);
+  State<StatefulWidget> createState() => _BasePage(this.children!);
 }
 
 class _BasePage extends State<BasePage> {

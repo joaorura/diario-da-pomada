@@ -9,7 +9,7 @@ import 'package:app_flutter/pages/first-carousel/list-white-dot.dart';
 
 class FirstCarousel extends StatefulWidget {
   final NotificationService notificationService;
-  FirstCarousel(this.notificationService, {Key key}) : super(key: key);
+  FirstCarousel(this.notificationService, {Key? key}) : super(key: key);
 
   @override
   _FirstCarouselState createState() => _FirstCarouselState();
@@ -29,7 +29,8 @@ class _FirstCarouselState extends State<FirstCarousel> {
   Widget build(BuildContext context) {
     return CarouselSlider(
         options: CarouselOptions(
-            onPageChanged: this.checkIndex(3),
+            onPageChanged: this.checkIndex(3) as dynamic Function(
+                int, CarouselPageChangedReason),
             height: double.infinity,
             viewportFraction: 1,
             enableInfiniteScroll: false),

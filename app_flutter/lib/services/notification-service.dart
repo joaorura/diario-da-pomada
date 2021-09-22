@@ -8,9 +8,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
-  FlutterLocalNotificationsPlugin fltrNotification;
+  FlutterLocalNotificationsPlugin? fltrNotification;
 
-  Future _notificationSelected(String payload) async {
+  Future<dynamic> _notificationSelected(String? payload) async {
     runApp(MyHomePage());
   }
 
@@ -21,7 +21,7 @@ class NotificationService {
         android: androidInitilize, iOS: iOSinitilize);
 
     fltrNotification = new FlutterLocalNotificationsPlugin();
-    fltrNotification.initialize(initilizationsSettings,
+    fltrNotification!.initialize(initilizationsSettings,
         onSelectNotification: _notificationSelected);
   }
 
@@ -43,7 +43,7 @@ class NotificationService {
 
     final scheduledDate = tz.TZDateTime.from(scheduledTime, location);
 
-    fltrNotification.zonedSchedule(notifications.id, notifications.title,
+    fltrNotification!.zonedSchedule(notifications.id!, notifications.title,
         notifications.body, scheduledDate, generalNotificationDetails,
         payload: notifications.payload,
         androidAllowWhileIdle: true,
@@ -73,13 +73,13 @@ class NotificationService {
   }
 
   Future<void> attNotifications(
-      {CalendarModel calendarModel, TimeOfDay timeNotification}) async {
+      {CalendarModel? calendarModel, TimeOfDay? timeNotification}) async {
     await clearAll();
 
     StorageService storageService = new StorageService();
 
     if (timeNotification == null) {
-      timeNotification = storageService.getTimeNotification();
+      timeNotification = await storageService.getTimeNotification();
     }
 
     if (calendarModel == null) {
@@ -89,11 +89,11 @@ class NotificationService {
     }
 
     int id =
-        _mapNotifications(calendarModel.events, "diário", timeNotification, 1);
-    _mapNotifications(calendarModel.holidays, "semanal", timeNotification, id);
+        _mapNotifications(calendarModel.events!, "diário", timeNotification, 1);
+    _mapNotifications(calendarModel.holidays!, "semanal", timeNotification, id);
   }
 
   Future<void> clearAll() async {
-    await fltrNotification.cancelAll();
+    await fltrNotification!.cancelAll();
   }
 }

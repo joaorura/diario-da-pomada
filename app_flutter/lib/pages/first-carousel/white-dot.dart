@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class WhiteDot extends StatefulWidget {
-  final bool type;
+  final bool? type;
 
-  WhiteDot({Key key, this.type}) : super(key: key);
+  WhiteDot({Key? key, this.type}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return new _WhiteDot(this.type);
+    return new _WhiteDot(this.type!);
   }
 }
 

@@ -8,7 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 class FileService {
   Future<String> _nameFile(String name) async {
-    String tempPath = (await getExternalStorageDirectory()).path;
+    String tempPath = (await getExternalStorageDirectory())!.path;
     return tempPath + '/$name';
   }
 
@@ -22,7 +22,7 @@ class FileService {
     var bytes = ByteData.view(data.buffer);
     final buffer = bytes.buffer;
 
-    return File(filePath).writeAsBytes(
+    await File(filePath).writeAsBytes(
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 

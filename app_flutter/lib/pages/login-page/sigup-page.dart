@@ -13,15 +13,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cpfcnpj/cpfcnpj.dart';
 import 'login-page.dart';
 
 class SignupPage extends StatefulWidget {
   final NotificationService notificationService;
-  final SignupModel previousData;
-  final bool edit;
+  final SignupModel? previousData;
+  final bool? edit;
 
-  SignupPage(this.notificationService, {Key key, this.previousData, this.edit})
+  SignupPage(this.notificationService, {Key? key, this.previousData, this.edit})
       : super(key: key);
 
   @override
@@ -29,9 +28,9 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  SignupModel _data;
-  String _secondPassword;
-  bool _edit;
+  SignupModel? _data;
+  String? _secondPassword;
+  bool? _edit;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -41,19 +40,19 @@ class _SignupPageState extends State<SignupPage> {
     } else {
       _data = widget.previousData;
     }
-    _edit = widget.edit != null && widget.edit;
+    _edit = widget.edit != null && widget.edit!;
 
     super.initState();
   }
 
   void _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
         context: context,
-        initialDate: _data.birthDate,
+        initialDate: _data!.birthDate!,
         firstDate: DateTime.now().subtract(const Duration(days: 365000)),
         lastDate: DateTime.now());
-    if (picked != null && picked != _data.birthDate) {
-      _data.birthDate = picked;
+    if (picked != null && picked != _data!.birthDate) {
+      _data!.birthDate = picked;
       goPageWithoutBack(
           context,
           () => SignupPage(widget.notificationService,
@@ -62,17 +61,17 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void sendForm() async {
-    if (_formKey.currentState.validate()) {
-      if (_data.email == "") {
-        _data.email = null;
+    if (_formKey.currentState!.validate()) {
+      if (_data!.email == "") {
+        _data!.email = null;
       }
 
-      if (_data.nationalCard == "") {
-        _data.nationalCard = null;
+      if (_data!.nationalCard == "") {
+        _data!.nationalCard = null;
       }
 
       SignupService service = new SignupService();
-      if (await service.signUp(_data)) {
+      if (await service.signUp(_data!)) {
         goPageWithoutBack(
             context, () => DefaultPage(widget.notificationService))();
       } else {
@@ -82,17 +81,17 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void sendFormAtt() async {
-    if (_formKey.currentState.validate()) {
-      if (_data.email == "") {
-        _data.email = null;
+    if (_formKey.currentState!.validate()) {
+      if (_data!.email == "") {
+        _data!.email = null;
       }
 
-      if (_data.nationalCard == "") {
-        _data.nationalCard = null;
+      if (_data!.nationalCard == "") {
+        _data!.nationalCard = null;
       }
 
       SignupService service = new SignupService();
-      if (await service.attUser(_data)) {
+      if (await service.attUser(_data!)) {
         showSnackBar(context, "Cadastro atualizado.");
         goPageWithoutBack(
             context, () => DefaultPage(widget.notificationService, page: 3))();
@@ -105,7 +104,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget buildFuture(BuildContext context) {
     Widget editText, passwordCamps, buttons;
 
-    if (_edit) {
+    if (_edit!) {
       editText = Container(
           padding: EdgeInsetsDirectional.only(bottom: 30),
           child: Text("Atualizando Cadastro",
@@ -128,13 +127,13 @@ class _SignupPageState extends State<SignupPage> {
       passwordCamps = Column(children: [
         CampText(
           "Senha",
-          (String password) => _data.password = password,
+          (String? password) => _data!.password = password,
           inputs: [new LengthLimitingTextInputFormatter(128)],
           validate: (value) {
-            if (value.contains(" ")) {
+            if (value!.contains(" ")) {
               return "Não pode ter espaços em branco.";
             }
-            if (_data.password != _secondPassword) {
+            if (_data!.password != _secondPassword) {
               return "Senhas digitadas não são iguais.";
             }
             if (value.length > 3) {
@@ -143,18 +142,18 @@ class _SignupPageState extends State<SignupPage> {
               return 'Senha precisa ter no mínimo 4 letras.';
             }
           },
-          dataCamp: _data.password,
+          dataCamp: _data!.password,
           obcure: true,
         ),
         CampText(
           "Repita a senha",
-          (String password) => _secondPassword = password,
+          (String? password) => _secondPassword = password,
           inputs: [new LengthLimitingTextInputFormatter(128)],
           validate: (value) {
-            if (value.contains(" ")) {
+            if (value!.contains(" ")) {
               return "Não pode ter espaços em branco.";
             }
-            if (_data.password != _secondPassword) {
+            if (_data!.password != _secondPassword) {
               return "Senhas digitadas não são iguais.";
             }
             if (value.length > 3) {
@@ -163,7 +162,7 @@ class _SignupPageState extends State<SignupPage> {
               return 'Senha precisa ter no mínimo 4 letras.';
             }
           },
-          dataCamp: _data.password,
+          dataCamp: _data!.password,
           obcure: true,
         )
       ]);
@@ -188,30 +187,27 @@ class _SignupPageState extends State<SignupPage> {
           key: _formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: () {
-            Form.of(primaryFocus.context).save();
+            Form.of(primaryFocus!.context!)!.save();
           },
           child: Column(children: [
             editText,
             CampText(
               "Email",
-              (String email) {
-                _data.email = email;
+              (String? email) {
+                _data!.email = email;
               },
               inputs: [new LengthLimitingTextInputFormatter(128)],
               validate: (value) {
-                print(value);
-
                 if (value == null ||
                     value == "" ||
-                    (value != null &&
-                        RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                            .hasMatch(value))) {
+                    (RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(value))) {
                   return null;
                 } else {
                   return 'Email incorrento.';
                 }
               },
-              dataCamp: _data.email,
+              dataCamp: _data!.email,
             ),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
@@ -230,7 +226,7 @@ class _SignupPageState extends State<SignupPage> {
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.white)),
                   child: Text(
-                    UtilData.obterDataDDMMAAAA(_data.birthDate),
+                    UtilData.obterDataDDMMAAAA(_data!.birthDate!),
                     style: TextStyle(color: Colors.pink),
                   ),
                 ),
@@ -238,23 +234,23 @@ class _SignupPageState extends State<SignupPage> {
             ]),
             CampText(
               "Nome Completo",
-              (String fullName) => _data.fullName = fullName,
+              (String? fullName) => _data!.fullName = fullName,
               inputs: [new LengthLimitingTextInputFormatter(128)],
-              dataCamp: _data.fullName,
+              dataCamp: _data!.fullName,
             ),
             passwordCamps,
             CampText(
               "Cartão do SUS",
-              (String heathCard) => _data.heathCard = heathCard,
+              (String? heathCard) => _data!.heathCard = heathCard,
               inputs: [
                 FilteringTextInputFormatter.digitsOnly,
                 new LengthLimitingTextInputFormatter(15),
               ],
-              dataCamp: _data.heathCard,
+              dataCamp: _data!.heathCard,
             ),
             CampText(
               "CPF",
-              (String nationalCard) => _data.nationalCard = nationalCard,
+              (String? nationalCard) => _data!.nationalCard = nationalCard,
               inputs: [
                 FilteringTextInputFormatter.digitsOnly,
                 new LengthLimitingTextInputFormatter(11)
@@ -262,13 +258,13 @@ class _SignupPageState extends State<SignupPage> {
               validate: (value) {
                 if (value == null ||
                     value == "" ||
-                    (value != null && CPF.isValid(value))) {
+                    CPFValidator.isValid(value)) {
                   return null;
                 } else {
                   return 'CPF Inválido.';
                 }
               },
-              dataCamp: _data.nationalCard,
+              dataCamp: _data!.nationalCard,
             )
           ])),
       buttons
@@ -277,7 +273,7 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_edit) {
+    if (_edit!) {
       SignupService service = new SignupService();
 
       return FutureBuilder(
@@ -289,7 +285,7 @@ class _SignupPageState extends State<SignupPage> {
                 goPageWithoutBack(
                     context, () => CalendarPage(widget.notificationService))();
               }
-              this._data = data.data;
+              this._data = data.data as SignupModel?;
               return buildFuture(context);
             } else {
               return Container();

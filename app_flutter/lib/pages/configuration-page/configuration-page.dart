@@ -17,7 +17,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ConfigurationPage extends StatelessWidget {
   final NotificationService notificationService;
-  ConfigurationPage(this.notificationService, {Key key}) : super(key: key);
+  ConfigurationPage(this.notificationService, {Key? key}) : super(key: key);
 
   Function logoff(BuildContext context) {
     return () {
@@ -30,44 +30,46 @@ class ConfigurationPage extends StatelessWidget {
 
   Future<void> _downloadGeneral(BuildContext context) async {
     ReportService csvService = new ReportService();
-    FileModel csvModel = await csvService.getGeneralReport();
+    FileModel? fileModel = await csvService.getGeneralReport();
 
     FileService fileService = new FileService();
-    await fileService.writeFileBase64(
-        csvModel.fileBase64, "dp-r-general-${DateTime.now().toString()}.xlsx");
-    
-    showSnackBar(context, "Download do relátorio específico feito.");
+    await fileService.writeFileBase64(fileModel!.fileBase64,
+        "dp-r-general-${DateTime.now().toString()}.xlsx");
+
+    showSnackBar(context, "Download do relátorio geral feito.");
   }
 
-   Future<void> _downloadEspec(BuildContext context) async {
+  Future<void> _downloadEspec(BuildContext context) async {
     SignupService userService = SignupService();
-    SignupModel userData = await userService.getUser();
-    
-    if(userData == null) {
-      showSnackBar(context, "Falha a acessar os dados do usuário em download de relátorio específico.");
+    SignupModel? userData = await userService.getUser();
+
+    if (userData == null) {
+      showSnackBar(context,
+          "Falha a acessar os dados do usuário em download de relátorio específico.");
       return;
     }
 
-    String healthCard = userData.heathCard;
-    ReportService csvService = new ReportService();
-    FileModel csvModel = await csvService.getEspecificReport(healthCard);
+    String? healthCard = userData.heathCard;
+    ReportService reportService = new ReportService();
+    FileModel? fileModel = await reportService.getEspecificReport(healthCard);
 
-    if(csvModel == null) {
-      showSnackBar(context, "Falha a acessar os dados do relatório em download de relátorio específico.");
+    if (fileModel == null) {
+      showSnackBar(context,
+          "Falha a acessar os dados do relatório em download de relátorio específico.");
       return;
     }
 
     FileService fileService = new FileService();
     await fileService.writeFileBase64(
-        csvModel.fileBase64, "dp-r-espec-${DateTime.now().toString()}.xlsx");
+        fileModel.fileBase64, "dp-r-espec-${DateTime.now().toString()}.xlsx");
 
     showSnackBar(context, "Download do relátorio específico feito.");
   }
 
-  Widget buildFuture(BuildContext context, AsyncSnapshot<TypeUserModel> data) {
+  Widget buildFuture(BuildContext context, AsyncSnapshot<TypeUserModel?> data) {
     Widget downloadCsv;
 
-    if (data.hasData && data.data.typeUser == TypeUserEnum.admin) {
+    if (data.hasData && data.data?.typeUser == TypeUserEnum.admin) {
       downloadCsv = Column(children: [
         Container(
           margin: EdgeInsetsDirectional.only(bottom: 20, top: 30),
@@ -91,7 +93,9 @@ class ConfigurationPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(child: Text("Download Relatório Geral"), onPressed: () => _downloadGeneral(context))
+                TextButton(
+                    child: Text("Download Relatório Geral"),
+                    onPressed: () => _downloadGeneral(context))
               ],
             )),
         Container(
@@ -99,7 +103,9 @@ class ConfigurationPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(child: Text("Download Relatório Específico"), onPressed: () => _downloadEspec(context))
+                TextButton(
+                    child: Text("Download Relatório Específico"),
+                    onPressed: () => _downloadEspec(context))
               ],
             ))
       ]);
@@ -135,8 +141,9 @@ class ConfigurationPage extends StatelessWidget {
                 children: [
                   TextButton(
                       child: Text("Notificações"),
-                      onPressed: goPageWithBack(
-                          context, () => NotificacoesPage(notificationService)))
+                      onPressed: goPageWithBack(context,
+                              () => NotificacoesPage(notificationService))
+                          as void Function()?)
                 ],
               )),
           Container(
@@ -147,7 +154,8 @@ class ConfigurationPage extends StatelessWidget {
                   TextButton(
                       child: Text("Editar Perfil"),
                       onPressed: goPageWithBack(context,
-                          () => SignupPage(notificationService, edit: true)))
+                              () => SignupPage(notificationService, edit: true))
+                          as void Function()?)
                 ],
               )),
           Container(
@@ -156,7 +164,8 @@ class ConfigurationPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                      child: Text("Sair da Conta"), onPressed: logoff(context))
+                      child: Text("Sair da Conta"),
+                      onPressed: logoff(context) as void Function()?)
                 ],
               )),
           downloadCsv,

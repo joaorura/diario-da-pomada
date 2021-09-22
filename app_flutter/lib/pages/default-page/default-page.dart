@@ -8,27 +8,28 @@ import 'package:flutter/material.dart';
 
 class DefaultPage extends StatefulWidget {
   final NotificationService notificationService;
-  final int page;
+  final int? page;
 
-  DefaultPage(this.notificationService, {Key key, this.page}) : super(key: key);
+  DefaultPage(this.notificationService, {Key? key, this.page})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DefaultPage();
 }
 
 class _DefaultPage extends State<DefaultPage> {
-  Widget bodyChild;
-  int _selectedIndex;
+  Widget? bodyChild;
+  int? _selectedIndex;
 
   void initState() {
-    if (widget.page != null && widget.page < 4) {
+    if (widget.page != null && widget.page! < 4) {
       _selectedIndex = widget.page;
     } else {
       _selectedIndex = 1;
     }
 
     super.initState();
-    _changeBody(_selectedIndex);
+    _changeBody(_selectedIndex!);
   }
 
   void _changeBody(int index) {
@@ -73,7 +74,7 @@ class _DefaultPage extends State<DefaultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: this.bodyChild),
+      body: SafeArea(child: this.bodyChild!),
       bottomNavigationBar: BottomNavigationBar(
         fixedColor: Colors.black,
         items: const <BottomNavigationBarItem>[
@@ -94,7 +95,7 @@ class _DefaultPage extends State<DefaultPage> {
             label: 'Menu',
           )
         ],
-        currentIndex: this._selectedIndex,
+        currentIndex: this._selectedIndex!,
         onTap: this._onItemTapped,
       ),
     );

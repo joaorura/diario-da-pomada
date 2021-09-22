@@ -1,53 +1,61 @@
 import 'dart:convert';
 
-import 'package:app_flutter/main.dart';
 import 'package:app_flutter/models/calendar-model.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-String tokenDefault;
+String? tokenDefault;
 
 class StorageService {
-  static const TimeOfDay _defaultTimeNotifcation =
-      TimeOfDay(hour: 9, minute: 0);
+  static const TimeOfDay DefaultTimeNotifcation = TimeOfDay(hour: 9, minute: 0);
 
-  String getToken() {
+  Future<String?> getToken() async {
     if (tokenDefault == null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       tokenDefault = prefs.getString('token');
     }
 
     return tokenDefault;
   }
 
-  void saveToken(String token) {
+  Future<void> saveToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     prefs.setString('token', token);
     tokenDefault = token;
   }
 
-  void setTimeNotification(int hour, int minute) {
+  Future<void> setTimeNotification(int hour, int minute) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     prefs.setInt("notifications-hour", hour);
     prefs.setInt("notifications-minute", minute);
   }
 
   void setDefaultTimeNotification() {
     setTimeNotification(
-        _defaultTimeNotifcation.hour, _defaultTimeNotifcation.minute);
+        DefaultTimeNotifcation.hour, DefaultTimeNotifcation.minute);
   }
 
-  TimeOfDay getTimeNotification() {
-    int hour = prefs.getInt("notifications-hour");
-    int minute = prefs.getInt("notifications-minute");
+  Future<TimeOfDay> getTimeNotification() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    int? hour = prefs.getInt("notifications-hour");
+    int? minute = prefs.getInt("notifications-minute");
 
     if (hour == null || minute == null) {
       setDefaultTimeNotification();
-      return _defaultTimeNotifcation;
+      return DefaultTimeNotifcation;
     }
 
     TimeOfDay timeNotification = TimeOfDay(hour: hour, minute: minute);
     return timeNotification;
   }
 
-  CalendarModel getCalendar() {
-    String data = prefs.getString("calendar");
+  Future<CalendarModel> getCalendar() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? data = prefs.getString("calendar");
 
     if (data == null) {
       return CalendarModel(null, null, false, erro: true);
@@ -56,18 +64,20 @@ class StorageService {
     return CalendarModel.fromJson(jsonDecode(data));
   }
 
-  void setCalendar(String calendar) {
+  Future<void> setCalendar(String calendar) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     prefs.setString("calendar", calendar);
   }
 
   Future<void> reload() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     await prefs.reload();
   }
 
-  void clearAll() {
-    prefs.remove('token');
-    prefs.remove('calendar');
-    prefs.remove("notifications-hour");
-    prefs.remove("notifications-minute");
+  Future<void> clearAll() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
   }
 }

@@ -6,16 +6,15 @@ class DataModel {
 
   DataModel.fromJson(Map<String, dynamic> json)
       : name = json['name'],
-      healthCard = json['healthCard'];
+        healthCard = json['healthCard'];
 }
 
 class UserDataModel {
-  final List<DataModel> users;
+  final List<DataModel>? users;
 
   UserDataModel(this.users);
 
-  static List<DataModel> _convert(
-      List<dynamic> data) {
+  static List<DataModel> _convert(List<dynamic> data) {
     List<DataModel> result = [];
     for (var item in data) {
       DataModel data = DataModel.fromJson(item);

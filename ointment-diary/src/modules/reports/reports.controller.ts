@@ -1,4 +1,4 @@
-import { Body, Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { RoleEnum } from '../Auth/role-auth.guard';
 import { GetSpecificReport } from './reports.dto';
@@ -14,7 +14,7 @@ export class ReportsController {
         return await this.reportsService.getGeneralReport();
     }
 
-    @Get('specific')
+    @Post('specific')
     @Role(RoleEnum.Admin)
     async createSpecificReport(@Body() body: GetSpecificReport) {
         return await this.reportsService.getSpecificReport(body.healthCard);

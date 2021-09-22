@@ -1,7 +1,7 @@
 class CalendarModel {
-  final Map<DateTime, List<String>> events, holidays;
-  final bool isNew;
-  bool erro = false;
+  final Map<DateTime, List<String>>? events, holidays;
+  final bool? isNew;
+  bool? erro = false;
 
   CalendarModel(this.events, this.holidays, this.isNew, {this.erro});
 

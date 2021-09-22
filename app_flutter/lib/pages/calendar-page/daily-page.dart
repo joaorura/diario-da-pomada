@@ -12,7 +12,7 @@ class DailyPage extends StatefulWidget {
   final NotificationService notificationService;
   final DateTime dataMarcacao;
 
-  DailyPage(this.notificationService, this.dataMarcacao, {Key key})
+  DailyPage(this.notificationService, this.dataMarcacao, {Key? key})
       : super(key: key);
 
   @override
@@ -43,7 +43,7 @@ class _DailyPageState extends State<DailyPage> {
             key: _formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: () {
-              Form.of(primaryFocus.context).save();
+              Form.of(primaryFocus?.context as BuildContext)?.save();
             },
             child: Container(
                 child: Column(
@@ -87,7 +87,7 @@ class _DailyPageState extends State<DailyPage> {
                                   fontSize: 19,
                                   decoration: TextDecoration.none))),
                       (_dailyQuestionModel.usouPomada == null ||
-                              _dailyQuestionModel.usouPomada
+                              _dailyQuestionModel.usouPomada as bool
                           ? Container()
                           : Container(
                               child: TextField(

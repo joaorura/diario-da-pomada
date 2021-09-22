@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:app_flutter/pages/first-carousel/white-dot.dart';
 
 class ListWhiteDot extends StatefulWidget {
-  final int whiteIndex, size;
+  final int? whiteIndex, size;
 
-  ListWhiteDot({Key key, this.whiteIndex, this.size}) : super(key: key);
+  ListWhiteDot({Key? key, this.whiteIndex, this.size}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ListWhiteDot(whiteIndex, size);
+  State<StatefulWidget> createState() => _ListWhiteDot(whiteIndex!, size!);
 }
 
 class _ListWhiteDot extends State<ListWhiteDot> {
-  final int whiteIndex, size;
+  final int? whiteIndex, size;
 
-  List<WhiteDot> listWhiteDot;
+  List<WhiteDot>? listWhiteDot;
 
   _ListWhiteDot(this.whiteIndex, this.size);
 
@@ -21,7 +21,7 @@ class _ListWhiteDot extends State<ListWhiteDot> {
   void initState() {
     super.initState();
     listWhiteDot = new List<WhiteDot>.generate(
-        this.size,
+        this.size!,
         (index) => index == this.whiteIndex
             ? WhiteDot(type: true)
             : WhiteDot(type: false));
@@ -30,7 +30,7 @@ class _ListWhiteDot extends State<ListWhiteDot> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: this.listWhiteDot,
+      children: this.listWhiteDot!,
       mainAxisAlignment: MainAxisAlignment.center,
     );
   }

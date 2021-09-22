@@ -5,7 +5,6 @@ import 'package:app_flutter/services/notification-service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -17,14 +16,15 @@ Future<void> _configureLocalTimeZone() async {
   tz.setLocalLocation(tz.getLocation(timeZoneName));
 }
 
-SharedPreferences prefs;
 final TimeZone timeZone = TimeZone();
 
-Future<void> main() async {
+Future<void> loadConf() async {
   WidgetsFlutterBinding.ensureInitialized();
   await _configureLocalTimeZone();
-  prefs = await SharedPreferences.getInstance();
+}
 
+Future<void> main() async {
+  await loadConf();
   runApp(MyApp());
 }
 
@@ -45,34 +45,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  NotificationService notificationService;
-  void initState() {
-    super.initState();
-    notificationService = new NotificationService();
+  Widget buildFuture(BuildContext context, AsyncSnapshot<bool> data) {
+    if (data.hasData) {
+      NotificationService notificationService = new NotificationService();
+      if (data.data as bool) {
+        return App(home: DefaultPage(notificationService));
+      } else {
+        return App(home: FirstCarousel(notificationService));
+      }
+    } else {
+      return Container();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     LoginService loginService = new LoginService();
-    if (loginService.loged()) {
-      return App(home: DefaultPage(notificationService));
-    } else {
-      return App(home: FirstCarousel(notificationService));
-    }
+    Future<bool> futureData = loginService.loged();
+
+    return new FutureBuilder(builder: buildFuture, future: futureData);
   }
 }
 
 class App extends StatefulWidget {
-  final Widget home;
+  final Widget? home;
 
-  App({Key key, this.home}) : super(key: key);
+  App({Key? key, this.home}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _App(this.home);
 }
 
 class _App extends State<App> {
-  final Widget home;
+  final Widget? home;
 
   _App(this.home);
 
@@ -81,11 +86,12 @@ class _App extends State<App> {
     return MaterialApp(
       title: 'Diario da Pomada',
       theme: ThemeData(
-        primarySwatch: Colors.grey,
+        primarySwatch: Colors.pink,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home:
-          Scaffold(body: SafeArea(top: false, bottom: false, child: this.home)),
+      home: Scaffold(
+          body:
+              SafeArea(top: false, bottom: false, child: this.home as Widget)),
     );
   }
 }

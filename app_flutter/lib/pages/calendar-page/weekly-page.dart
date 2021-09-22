@@ -13,7 +13,7 @@ class WeeklyPage extends StatefulWidget {
   final NotificationService notificationService;
   final DateTime dataMarcacao;
 
-  WeeklyPage(this.notificationService, this.dataMarcacao, {Key key})
+  WeeklyPage(this.notificationService, this.dataMarcacao, {Key? key})
       : super(key: key);
 
   @override
@@ -21,7 +21,7 @@ class WeeklyPage extends StatefulWidget {
 }
 
 class _WeeklyPageState extends State<WeeklyPage> {
-  WeekQuestionModel _weekQuestionModel;
+  WeekQuestionModel? _weekQuestionModel;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -31,17 +31,18 @@ class _WeeklyPageState extends State<WeeklyPage> {
   }
 
   void sendForm() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState?.validate() as bool) {
       WeekQuestionService weekQuestionService = WeekQuestionService();
-      _weekQuestionModel.dataDePreenchimento = DateTime.now();
-      _weekQuestionModel.dataDeMarcacao = widget.dataMarcacao;
-      if (!_weekQuestionModel.validate()) {
+      _weekQuestionModel?.dataDePreenchimento = DateTime.now();
+      _weekQuestionModel?.dataDeMarcacao = widget.dataMarcacao;
+      if (!(_weekQuestionModel?.validate() as bool)) {
         showSnackBar(context, "Preencha todas as questões.");
         return;
       }
 
-      _weekQuestionModel.removeAllOther();
-      if (await weekQuestionService.save(_weekQuestionModel)) {
+      _weekQuestionModel?.removeAllOther();
+      if (await weekQuestionService
+          .save(_weekQuestionModel as WeekQuestionModel)) {
         showSnackBar(context, "Fórmulario enviado.");
 
         goPageWithoutBack(
@@ -62,7 +63,8 @@ class _WeeklyPageState extends State<WeeklyPage> {
               key: _formKey,
               autovalidateMode: AutovalidateMode.always,
               onChanged: () {
-                FormState form = Form.of(primaryFocus.context);
+                FormState? form =
+                    Form.of(primaryFocus?.context as BuildContext);
 
                 if (form != null) {
                   form.save();
@@ -86,10 +88,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                               EdgeInsets.only(top: 20, bottom: 20, left: 20)),
                       RadioListTile<bool>(
                           value: true,
-                          groupValue: _weekQuestionModel.dificuldadeIntroducao,
+                          groupValue: _weekQuestionModel?.dificuldadeIntroducao,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.dificuldadeIntroducao = value;
+                              _weekQuestionModel?.dificuldadeIntroducao = value;
                             });
                           },
                           title: Text('Sim',
@@ -99,10 +101,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<bool>(
                           value: false,
-                          groupValue: _weekQuestionModel.dificuldadeIntroducao,
+                          groupValue: _weekQuestionModel?.dificuldadeIntroducao,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.dificuldadeIntroducao = value;
+                              _weekQuestionModel?.dificuldadeIntroducao = value;
                             });
                           },
                           title: Text('Não',
@@ -128,10 +130,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                               EdgeInsets.only(top: 20, bottom: 20, left: 20)),
                       RadioListTile<bool>(
                           value: true,
-                          groupValue: _weekQuestionModel.aplicouDormirSexo,
+                          groupValue: _weekQuestionModel?.aplicouDormirSexo,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.aplicouDormirSexo = value;
+                              _weekQuestionModel?.aplicouDormirSexo = value;
                             });
                           },
                           title: Text('Sim',
@@ -141,10 +143,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<bool>(
                           value: false,
-                          groupValue: _weekQuestionModel.aplicouDormirSexo,
+                          groupValue: _weekQuestionModel?.aplicouDormirSexo,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.aplicouDormirSexo = value;
+                              _weekQuestionModel?.aplicouDormirSexo = value;
                             });
                           },
                           title: Text('Não',
@@ -170,11 +172,11 @@ class _WeeklyPageState extends State<WeeklyPage> {
                               EdgeInsets.only(top: 20, bottom: 20, left: 20)),
                       RadioListTile<bool>(
                           value: false,
-                          groupValue: _weekQuestionModel.sentiuIncomodo,
+                          groupValue: _weekQuestionModel?.sentiuIncomodo,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.sentiuIncomodo = value;
-                              _weekQuestionModel.tipoIncomodo = null;
+                              _weekQuestionModel?.sentiuIncomodo = value;
+                              _weekQuestionModel?.tipoIncomodo = null;
                             });
                           },
                           title: Text('Não',
@@ -184,10 +186,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<bool>(
                           value: true,
-                          groupValue: _weekQuestionModel.sentiuIncomodo,
+                          groupValue: _weekQuestionModel?.sentiuIncomodo,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.sentiuIncomodo = value;
+                              _weekQuestionModel?.sentiuIncomodo = value;
                             });
                           },
                           title: Text('Sim, qual?',
@@ -195,8 +197,8 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   color: Colors.black,
                                   fontSize: 19,
                                   decoration: TextDecoration.none))),
-                      (_weekQuestionModel.sentiuIncomodo == null ||
-                              !_weekQuestionModel.sentiuIncomodo
+                      (_weekQuestionModel?.sentiuIncomodo == null ||
+                              !(_weekQuestionModel?.sentiuIncomodo as bool)
                           ? Container()
                           : Container(
                               margin: EdgeInsets.only(bottom: 20, left: 40),
@@ -208,10 +210,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   RadioListTile<String>(
                                       value: 'Ardência',
                                       groupValue:
-                                          _weekQuestionModel.tipoIncomodo,
+                                          _weekQuestionModel?.tipoIncomodo,
                                       onChanged: (value) {
                                         setState(() {
-                                          _weekQuestionModel.tipoIncomodo =
+                                          _weekQuestionModel?.tipoIncomodo =
                                               value;
                                         });
                                       },
@@ -224,10 +226,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   RadioListTile<String>(
                                       value: 'Inchaço',
                                       groupValue:
-                                          _weekQuestionModel.tipoIncomodo,
+                                          _weekQuestionModel?.tipoIncomodo,
                                       onChanged: (value) {
                                         setState(() {
-                                          _weekQuestionModel.tipoIncomodo =
+                                          _weekQuestionModel?.tipoIncomodo =
                                               value;
                                         });
                                       },
@@ -240,10 +242,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   RadioListTile<String>(
                                       value: 'Vermelhidão',
                                       groupValue:
-                                          _weekQuestionModel.tipoIncomodo,
+                                          _weekQuestionModel?.tipoIncomodo,
                                       onChanged: (value) {
                                         setState(() {
-                                          _weekQuestionModel.tipoIncomodo =
+                                          _weekQuestionModel?.tipoIncomodo =
                                               value;
                                         });
                                       },
@@ -256,10 +258,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   RadioListTile<String>(
                                       value: 'Coceira',
                                       groupValue:
-                                          _weekQuestionModel.tipoIncomodo,
+                                          _weekQuestionModel?.tipoIncomodo,
                                       onChanged: (value) {
                                         setState(() {
-                                          _weekQuestionModel.tipoIncomodo =
+                                          _weekQuestionModel?.tipoIncomodo =
                                               value;
                                         });
                                       },
@@ -272,10 +274,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   RadioListTile<String>(
                                       value: 'Outros',
                                       groupValue:
-                                          _weekQuestionModel.tipoIncomodo,
+                                          _weekQuestionModel?.tipoIncomodo,
                                       onChanged: (value) {
                                         setState(() {
-                                          _weekQuestionModel.tipoIncomodo =
+                                          _weekQuestionModel?.tipoIncomodo =
                                               value;
                                         });
                                       },
@@ -285,8 +287,8 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                               fontSize: 19,
                                               decoration:
                                                   TextDecoration.none))),
-                                  (_weekQuestionModel.tipoIncomodo == null ||
-                                          _weekQuestionModel.tipoIncomodo !=
+                                  (_weekQuestionModel?.tipoIncomodo == null ||
+                                          _weekQuestionModel?.tipoIncomodo !=
                                               'Outros'
                                       ? Container()
                                       : Container(
@@ -294,7 +296,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                             onSaved: (value) {
                                               setState(() {
                                                 _weekQuestionModel
-                                                    .outroTipoIncomodo = value;
+                                                    ?.outroTipoIncomodo = value;
                                               });
                                             },
                                             decoration: InputDecoration(
@@ -340,10 +342,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                               EdgeInsets.only(top: 20, bottom: 20, left: 20)),
                       RadioListTile<String>(
                           value: 'Pastosa',
-                          groupValue: _weekQuestionModel.tipoSujeiraCalcinha,
+                          groupValue: _weekQuestionModel?.tipoSujeiraCalcinha,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.tipoSujeiraCalcinha = value;
+                              _weekQuestionModel?.tipoSujeiraCalcinha = value;
                             });
                           },
                           title: Text('Pastosa',
@@ -353,10 +355,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<String>(
                           value: 'Líquida',
-                          groupValue: _weekQuestionModel.tipoSujeiraCalcinha,
+                          groupValue: _weekQuestionModel?.tipoSujeiraCalcinha,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.tipoSujeiraCalcinha = value;
+                              _weekQuestionModel?.tipoSujeiraCalcinha = value;
                             });
                           },
                           title: Text('Líquida',
@@ -366,10 +368,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<String>(
                           value: 'Grumosa',
-                          groupValue: _weekQuestionModel.tipoSujeiraCalcinha,
+                          groupValue: _weekQuestionModel?.tipoSujeiraCalcinha,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.tipoSujeiraCalcinha = value;
+                              _weekQuestionModel?.tipoSujeiraCalcinha = value;
                             });
                           },
                           title: Text('Grumosa',
@@ -379,10 +381,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<String>(
                           value: 'Outra',
-                          groupValue: _weekQuestionModel.tipoSujeiraCalcinha,
+                          groupValue: _weekQuestionModel?.tipoSujeiraCalcinha,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.tipoSujeiraCalcinha = value;
+                              _weekQuestionModel?.tipoSujeiraCalcinha = value;
                             });
                           },
                           title: Text('Outra',
@@ -390,8 +392,8 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   color: Colors.black,
                                   fontSize: 19,
                                   decoration: TextDecoration.none))),
-                      (_weekQuestionModel.tipoSujeiraCalcinha == null ||
-                              _weekQuestionModel.tipoSujeiraCalcinha != 'Outra'
+                      (_weekQuestionModel?.tipoSujeiraCalcinha == null ||
+                              _weekQuestionModel?.tipoSujeiraCalcinha != 'Outra'
                           ? Container()
                           : Container(
                               margin: EdgeInsets.only(left: 50, right: 40),
@@ -399,7 +401,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                 onSaved: (value) {
                                   setState(() {
                                     _weekQuestionModel
-                                        .outroTipoSujeiraCalcinha = value;
+                                        ?.outroTipoSujeiraCalcinha = value;
                                   });
                                 },
                                 decoration: InputDecoration(
@@ -433,10 +435,12 @@ class _WeeklyPageState extends State<WeeklyPage> {
                               EdgeInsets.only(top: 20, bottom: 20, left: 20)),
                       RadioListTile<String>(
                           value: 'Amarronzada',
-                          groupValue: _weekQuestionModel.tipoCorResiduoCalcinha,
+                          groupValue:
+                              _weekQuestionModel?.tipoCorResiduoCalcinha,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.tipoCorResiduoCalcinha = value;
+                              _weekQuestionModel?.tipoCorResiduoCalcinha =
+                                  value;
                             });
                           },
                           title: Text('Amarronzada',
@@ -446,10 +450,12 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<String>(
                           value: 'Amarelada',
-                          groupValue: _weekQuestionModel.tipoCorResiduoCalcinha,
+                          groupValue:
+                              _weekQuestionModel?.tipoCorResiduoCalcinha,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.tipoCorResiduoCalcinha = value;
+                              _weekQuestionModel?.tipoCorResiduoCalcinha =
+                                  value;
                             });
                           },
                           title: Text('Amarelada',
@@ -459,10 +465,12 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<String>(
                           value: 'Esverdeada',
-                          groupValue: _weekQuestionModel.tipoCorResiduoCalcinha,
+                          groupValue:
+                              _weekQuestionModel?.tipoCorResiduoCalcinha,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.tipoCorResiduoCalcinha = value;
+                              _weekQuestionModel?.tipoCorResiduoCalcinha =
+                                  value;
                             });
                           },
                           title: Text('Esverdeada',
@@ -472,10 +480,12 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<String>(
                           value: 'Outra',
-                          groupValue: _weekQuestionModel.tipoCorResiduoCalcinha,
+                          groupValue:
+                              _weekQuestionModel?.tipoCorResiduoCalcinha,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.tipoCorResiduoCalcinha = value;
+                              _weekQuestionModel?.tipoCorResiduoCalcinha =
+                                  value;
                             });
                           },
                           title: Text('Outra',
@@ -483,8 +493,8 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   color: Colors.black,
                                   fontSize: 19,
                                   decoration: TextDecoration.none))),
-                      (_weekQuestionModel.tipoCorResiduoCalcinha == null ||
-                              _weekQuestionModel.tipoCorResiduoCalcinha !=
+                      (_weekQuestionModel?.tipoCorResiduoCalcinha == null ||
+                              _weekQuestionModel?.tipoCorResiduoCalcinha !=
                                   'Outra')
                           ? Container()
                           : Container(
@@ -493,7 +503,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                 onSaved: (value) {
                                   setState(() {
                                     _weekQuestionModel
-                                        .outroTipoCorResiduoCalcinha = value;
+                                        ?.outroTipoCorResiduoCalcinha = value;
                                   });
                                 },
                                 decoration: InputDecoration(
@@ -527,10 +537,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                               EdgeInsets.only(top: 20, bottom: 20, left: 20)),
                       RadioListTile<bool>(
                           value: true,
-                          groupValue: _weekQuestionModel.sanguePresente,
+                          groupValue: _weekQuestionModel?.sanguePresente,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.sanguePresente = value;
+                              _weekQuestionModel?.sanguePresente = value;
                             });
                           },
                           title: Text('Sim',
@@ -540,10 +550,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<bool>(
                           value: false,
-                          groupValue: _weekQuestionModel.sanguePresente,
+                          groupValue: _weekQuestionModel?.sanguePresente,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.sanguePresente = value;
+                              _weekQuestionModel?.sanguePresente = value;
                             });
                           },
                           title: Text('Não',
@@ -569,11 +579,11 @@ class _WeeklyPageState extends State<WeeklyPage> {
                               EdgeInsets.only(top: 20, bottom: 20, left: 20)),
                       RadioListTile<bool>(
                           value: false,
-                          groupValue: _weekQuestionModel.dificuldadeSexo,
+                          groupValue: _weekQuestionModel?.dificuldadeSexo,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.dificuldadeSexo = value;
-                              _weekQuestionModel.tipoDificuldadeSexo = null;
+                              _weekQuestionModel?.dificuldadeSexo = value;
+                              _weekQuestionModel?.tipoDificuldadeSexo = null;
                             });
                           },
                           title: Text('Não',
@@ -583,10 +593,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<bool>(
                           value: true,
-                          groupValue: _weekQuestionModel.dificuldadeSexo,
+                          groupValue: _weekQuestionModel?.dificuldadeSexo,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.dificuldadeSexo = value;
+                              _weekQuestionModel?.dificuldadeSexo = value;
                             });
                           },
                           title: Text('Sim, como?',
@@ -594,15 +604,15 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   color: Colors.black,
                                   fontSize: 19,
                                   decoration: TextDecoration.none))),
-                      (_weekQuestionModel.dificuldadeSexo == null ||
-                              !_weekQuestionModel.dificuldadeSexo
+                      (_weekQuestionModel?.dificuldadeSexo == null ||
+                              !(_weekQuestionModel?.dificuldadeSexo as bool)
                           ? Container()
                           : Container(
                               margin: EdgeInsets.only(left: 50, right: 40),
                               child: TextFormField(
                                 onSaved: (value) {
                                   setState(() {
-                                    _weekQuestionModel.tipoDificuldadeSexo =
+                                    _weekQuestionModel?.tipoDificuldadeSexo =
                                         value;
                                   });
                                 },
@@ -637,11 +647,11 @@ class _WeeklyPageState extends State<WeeklyPage> {
                               EdgeInsets.only(top: 20, bottom: 20, left: 20)),
                       RadioListTile<bool>(
                           value: false,
-                          groupValue: _weekQuestionModel.menstruouRecentemente,
+                          groupValue: _weekQuestionModel?.menstruouRecentemente,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.menstruouRecentemente = value;
-                              _weekQuestionModel.dataMenstruacao = null;
+                              _weekQuestionModel?.menstruouRecentemente = value;
+                              _weekQuestionModel?.dataMenstruacao = null;
                             });
                           },
                           title: Text('Não',
@@ -651,10 +661,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<bool>(
                           value: true,
-                          groupValue: _weekQuestionModel.menstruouRecentemente,
+                          groupValue: _weekQuestionModel?.menstruouRecentemente,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.menstruouRecentemente = value;
+                              _weekQuestionModel?.menstruouRecentemente = value;
                             });
                           },
                           title: Text('Sim, Quando?',
@@ -662,15 +672,16 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   color: Colors.black,
                                   fontSize: 19,
                                   decoration: TextDecoration.none))),
-                      (_weekQuestionModel.menstruouRecentemente == null ||
-                              !_weekQuestionModel.menstruouRecentemente
+                      (_weekQuestionModel?.menstruouRecentemente == null ||
+                              !(_weekQuestionModel?.menstruouRecentemente
+                                  as bool)
                           ? Container()
                           : Container(
                               margin: EdgeInsets.only(left: 50, right: 40),
                               child: DateTimeFormField(
                                 onDateSelected: (value) {
                                   setState(() {
-                                    _weekQuestionModel.dataMenstruacao = value;
+                                    _weekQuestionModel?.dataMenstruacao = value;
                                   });
                                 },
                                 decoration: const InputDecoration(
@@ -688,7 +699,7 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                     return 'Data precisa ser preenchida.';
                                   }
 
-                                  if (e != null && e.isBefore(DateTime.now())) {
+                                  if (e.isBefore(DateTime.now())) {
                                     return null;
                                   } else {
                                     return 'Data precisa ser menor do que a de hoje.';
@@ -714,12 +725,13 @@ class _WeeklyPageState extends State<WeeklyPage> {
                       RadioListTile<bool>(
                           value: true,
                           groupValue:
-                              _weekQuestionModel.mestruacaoIgualAnterior,
+                              _weekQuestionModel?.mestruacaoIgualAnterior,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.mestruacaoIgualAnterior =
+                              _weekQuestionModel?.mestruacaoIgualAnterior =
                                   value;
-                              _weekQuestionModel.tipoMestruacaoDiferente = null;
+                              _weekQuestionModel?.tipoMestruacaoDiferente =
+                                  null;
                             });
                           },
                           title: Text('Sim',
@@ -730,10 +742,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                       RadioListTile<bool>(
                           value: false,
                           groupValue:
-                              _weekQuestionModel.mestruacaoIgualAnterior,
+                              _weekQuestionModel?.mestruacaoIgualAnterior,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.mestruacaoIgualAnterior =
+                              _weekQuestionModel?.mestruacaoIgualAnterior =
                                   value;
                             });
                           },
@@ -742,16 +754,17 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   color: Colors.black,
                                   fontSize: 19,
                                   decoration: TextDecoration.none))),
-                      (_weekQuestionModel.mestruacaoIgualAnterior == null ||
-                              _weekQuestionModel.mestruacaoIgualAnterior
+                      (_weekQuestionModel?.mestruacaoIgualAnterior == null ||
+                              _weekQuestionModel?.mestruacaoIgualAnterior
+                                  as bool
                           ? Container()
                           : Container(
                               margin: EdgeInsets.only(left: 50, right: 40),
                               child: TextFormField(
                                 onSaved: (value) {
                                   setState(() {
-                                    _weekQuestionModel.tipoMestruacaoDiferente =
-                                        value;
+                                    _weekQuestionModel
+                                        ?.tipoMestruacaoDiferente = value;
                                   });
                                 },
                                 decoration: InputDecoration(
@@ -785,11 +798,11 @@ class _WeeklyPageState extends State<WeeklyPage> {
                               EdgeInsets.only(top: 20, bottom: 20, left: 20)),
                       RadioListTile<bool>(
                           value: false,
-                          groupValue: _weekQuestionModel.parouUso,
+                          groupValue: _weekQuestionModel?.parouUso,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.parouUso = value;
-                              _weekQuestionModel.motivoParadaUso = null;
+                              _weekQuestionModel?.parouUso = value;
+                              _weekQuestionModel?.motivoParadaUso = null;
                             });
                           },
                           title: Text('Não',
@@ -799,10 +812,10 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   decoration: TextDecoration.none))),
                       RadioListTile<bool>(
                           value: true,
-                          groupValue: _weekQuestionModel.parouUso,
+                          groupValue: _weekQuestionModel?.parouUso,
                           onChanged: (value) {
                             setState(() {
-                              _weekQuestionModel.parouUso = value;
+                              _weekQuestionModel?.parouUso = value;
                             });
                           },
                           title: Text('Sim, porque?',
@@ -810,15 +823,15 @@ class _WeeklyPageState extends State<WeeklyPage> {
                                   color: Colors.black,
                                   fontSize: 19,
                                   decoration: TextDecoration.none))),
-                      (_weekQuestionModel.parouUso == null ||
-                              !_weekQuestionModel.parouUso
+                      (_weekQuestionModel?.parouUso == null ||
+                              !(_weekQuestionModel?.parouUso as bool)
                           ? Container()
                           : Container(
                               margin: EdgeInsets.only(left: 50, right: 40),
                               child: TextFormField(
                                 onSaved: (value) {
                                   setState(() {
-                                    _weekQuestionModel.motivoParadaUso = value;
+                                    _weekQuestionModel?.motivoParadaUso = value;
                                   });
                                 },
                                 decoration: InputDecoration(

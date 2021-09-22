@@ -12,57 +12,68 @@ import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
   final NotificationService notificationService;
-  CalendarPage(this.notificationService, {Key key}) : super(key: key);
+  final bool? answer;
+  CalendarPage(this.notificationService, {Key? key, this.answer})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CalendarPageState();
+  State<StatefulWidget> createState() => _CalendarPageState(answer);
+}
+
+class Event {
+  final String title;
+
+  Event(this.title);
+
+  String toString() => this.title;
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  CalendarController _calendarController = CalendarController();
+  DateTime _selectedDay = DateTime.now();
+  bool answer = false;
 
-  @override
-  void dispose() {
-    _calendarController.dispose();
-    super.dispose();
+  _CalendarPageState(bool? answerRec) {
+    if (answerRec != null) {
+      answer = answerRec;
+    }
   }
+  void _onDaySelected(DateTime day, Map<DateTime, List<String>>? mapEvents,
+      Map<DateTime, List<String>>? holidays) {
+    int typeDay;
 
-  void _onDaySelected(DateTime day, List events, List holidays) {
-    String eventDay = events.length == 0 ? '' : events.first;
-    String holidayDay = holidays.length == 0 ? '' : holidays.first;
-    String typeDay;
-
-    if (eventDay.isEmpty) {
-      if (holidayDay.isEmpty) {
-        return;
-      } else {
-        typeDay = holidayDay;
-      }
-    } else if (holidayDay.isEmpty) {
-      typeDay = eventDay;
-    } else {
-      typeDay = holidayDay;
+    if (!isSameDay(day, _selectedDay)) {
+      setState(() {
+        _selectedDay = day;
+      });
     }
 
-    if (DateTime.now().isBefore(day)) {
+    day = DateTime(day.year, day.month, day.day);
+
+    if (holidays!.containsKey(day)) {
+      typeDay = 0;
+    } else if (mapEvents!.containsKey(day)) {
+      typeDay = 1;
+    } else {
+      typeDay = 2;
+    }
+
+    if (answer && DateTime.now().isBefore(day)) {
       return;
     }
 
-    typeDay = typeDay.toLowerCase();
-
     switch (typeDay) {
-      case 'daily':
-        goPageWithBack(
-            context,
-            () => MaterialAppCustom(DailyPage(widget.notificationService, day),
-                'Acompanhamento'))();
-        break;
-
-      case 'weekly':
+      case 0:
         goPageWithBack(
             context,
             () => MaterialAppCustom(
                 WeeklyPage(widget.notificationService, day), 'Semanal'))();
+        break;
+
+      case 1:
+        goPageWithBack(
+            context,
+            () => MaterialAppCustom(DailyPage(widget.notificationService, day),
+                'Acompanhamento'))();
         break;
 
       default:
@@ -70,46 +81,83 @@ class _CalendarPageState extends State<CalendarPage> {
     }
   }
 
+  List<Event> _eventLoader(
+      Map<DateTime, List<String>>? mapEvents, DateTime dateTime) {
+    List<Event> result = [];
+
+    if (mapEvents == null) {
+      return result;
+    }
+
+    dateTime = DateTime(dateTime.year, dateTime.month, dateTime.day);
+    if (mapEvents.containsKey(dateTime)) {
+      for (String data in mapEvents[dateTime]!) {
+        result.add(Event(data));
+      }
+    }
+
+    return result;
+  }
+
+  bool _holidayPredicate(
+      Map<DateTime, List<String>>? holidays, DateTime dateTime) {
+    if (holidays == null) {
+      return false;
+    }
+
+    return holidays
+        .containsKey(DateTime(dateTime.year, dateTime.month, dateTime.day));
+  }
+
   Widget buildFuture(BuildContext context, AsyncSnapshot<CalendarModel> data) {
-    if (data.data.erro) {
-      WidgetsBinding.instance.addPostFrameCallback(
+    if ((data.data?.erro) as bool) {
+      WidgetsBinding.instance?.addPostFrameCallback(
           (_) => showSnackBar(context, "Erro de conexão."));
     }
 
     return TableCalendar(
-      events: data.data.events,
-      holidays: data.data.holidays,
+      firstDay: DateTime.now().subtract(Duration(days: 365)),
+      lastDay: DateTime.now().add(Duration(days: 365)),
+      focusedDay: _selectedDay,
+      eventLoader: (DateTime date) => _eventLoader(data.data?.events, date),
+      holidayPredicate: (DateTime date) =>
+          _holidayPredicate(data.data?.holidays, date),
       weekendDays: [],
       calendarStyle: CalendarStyle(
-          selectedColor: Colors.pink[400],
-          todayColor: Colors.pink[200],
-          markersColor: Colors.red[300],
+          selectedTextStyle: TextStyle(color: Colors.white),
+          selectedDecoration: BoxDecoration(
+            color: Colors.pink[300],
+            shape: BoxShape.circle,
+          ),
+          todayTextStyle: TextStyle(color: Colors.pink[200]),
+          markerDecoration:
+              BoxDecoration(color: Colors.red[900], shape: BoxShape.circle),
           outsideDaysVisible: false,
-          eventDayStyle: TextStyle(
-              fontWeight: FontWeight.w700, color: Colors.pink.shade200),
-          holidayStyle: TextStyle(
-              fontWeight: FontWeight.w900, color: Colors.pinkAccent.shade700)),
+          holidayTextStyle:
+              TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+          holidayDecoration: BoxDecoration(
+              color: Colors.red[500]!.withAlpha(150), shape: BoxShape.circle)),
       headerStyle: HeaderStyle(
         titleTextStyle: GoogleFonts.notoSans(
             color: Colors.black,
             fontSize: 25,
             fontWeight: FontWeight.w600,
             decoration: TextDecoration.none),
-        formatButtonTextStyle:
-            TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
+        formatButtonTextStyle: TextStyle(color: Colors.white, fontSize: 15.0),
         formatButtonDecoration: BoxDecoration(
           color: Colors.pink[400],
           borderRadius: BorderRadius.circular(16.0),
         ),
       ),
-      calendarController: this._calendarController,
       locale: 'pt_br',
       availableCalendarFormats: const {
-        CalendarFormat.month: "1 Semana",
-        CalendarFormat.twoWeeks: '4 Semanas',
-        CalendarFormat.week: '2 Semanas'
+        CalendarFormat.month: 'Mês',
       },
-      onDaySelected: _onDaySelected,
+      calendarFormat: CalendarFormat.month,
+      currentDay: _selectedDay,
+      selectedDayPredicate: (DateTime day) => isSameDay(day, _selectedDay),
+      onDaySelected: (DateTime selected, DateTime focused) =>
+          _onDaySelected(selected, data.data!.events, data.data!.holidays),
     );
   }
 

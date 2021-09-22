@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 class SpaceCamp extends StatelessWidget {
   final String nameCamp;
 
-  SpaceCamp(this.nameCamp, {Key key}) : super(key: key);
+  SpaceCamp(this.nameCamp, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +33,16 @@ class SpaceCamp extends StatelessWidget {
 }
 
 class CampText extends StatefulWidget {
-  final String nameCamp;
-  final Function getData;
-  final List<TextInputFormatter> inputs;
-  final String Function(String) validate;
-  final String dataCamp;
-  final Widget icon;
-  final bool obcure;
+  final String? nameCamp;
+  final void Function(String?)? getData;
+  final List<TextInputFormatter>? inputs;
+  final String? Function(String?)? validate;
+  final String? dataCamp;
+  final Widget? icon;
+  final bool? obcure;
 
   CampText(this.nameCamp, this.getData,
-      {Key key,
+      {Key? key,
       this.inputs,
       this.validate,
       this.dataCamp,
@@ -55,9 +55,9 @@ class CampText extends StatefulWidget {
 }
 
 class _CampText extends State<CampText> {
-  String Function(String) validate;
-  TextEditingController _controller;
-  bool _obscure;
+  String Function(String)? validate;
+  TextEditingController? _controller;
+  bool? _obscure;
 
   @override
   void initState() {
@@ -77,7 +77,7 @@ class _CampText extends State<CampText> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          child: Text(widget.nameCamp,
+          child: Text(widget.nameCamp!,
               style: GoogleFonts.notoSans(color: Colors.white)),
         ),
         Container(
@@ -99,7 +99,7 @@ class _CampText extends State<CampText> {
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(left: 10, right: 10),
                 icon: widget.icon),
-            obscureText: _obscure,
+            obscureText: _obscure!,
           ),
         )
       ],
