@@ -1,12 +1,14 @@
-import 'package:app_flutter/models/csv-model.dart';
+import 'package:app_flutter/models/file-model.dart';
+import 'package:app_flutter/models/signup-model.dart';
 import 'package:app_flutter/models/type-user-model.dart';
 import 'package:app_flutter/pages/login-page/login-page.dart';
 import 'package:app_flutter/pages/login-page/sigup-page.dart';
 import 'package:app_flutter/pages/notifications-page/notifications-page.dart';
-import 'package:app_flutter/services/csv-service.dart';
+import 'package:app_flutter/services/report-service.dart';
 import 'package:app_flutter/services/file-service.dart';
 import 'package:app_flutter/services/login-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
+import 'package:app_flutter/services/signup-service.dart';
 import 'package:app_flutter/services/type-user-service.dart';
 import 'package:app_flutter/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,13 +28,40 @@ class ConfigurationPage extends StatelessWidget {
     };
   }
 
-  Future<void> _downloadCsv() async {
-    CsvService csvService = new CsvService();
-    CsvModel csvModel = await csvService.getCsv();
+  Future<void> _downloadGeneral(BuildContext context) async {
+    ReportService csvService = new ReportService();
+    FileModel csvModel = await csvService.getGeneralReport();
 
     FileService fileService = new FileService();
-    await fileService.writeFileString(
-        csvModel.dataCsv, "diario-da-pomada-${DateTime.now().toString()}.csv");
+    await fileService.writeFileBase64(
+        csvModel.fileBase64, "dp-r-general-${DateTime.now().toString()}.xlsx");
+    
+    showSnackBar(context, "Download do relátorio específico feito.");
+  }
+
+   Future<void> _downloadEspec(BuildContext context) async {
+    SignupService userService = SignupService();
+    SignupModel userData = await userService.getUser();
+    
+    if(userData == null) {
+      showSnackBar(context, "Falha a acessar os dados do usuário em download de relátorio específico.");
+      return;
+    }
+
+    String healthCard = userData.heathCard;
+    ReportService csvService = new ReportService();
+    FileModel csvModel = await csvService.getEspecificReport(healthCard);
+
+    if(csvModel == null) {
+      showSnackBar(context, "Falha a acessar os dados do relatório em download de relátorio específico.");
+      return;
+    }
+
+    FileService fileService = new FileService();
+    await fileService.writeFileBase64(
+        csvModel.fileBase64, "dp-r-espec-${DateTime.now().toString()}.xlsx");
+
+    showSnackBar(context, "Download do relátorio específico feito.");
   }
 
   Widget buildFuture(BuildContext context, AsyncSnapshot<TypeUserModel> data) {
@@ -62,7 +91,15 @@ class ConfigurationPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(child: Text("Download CSV"), onPressed: _downloadCsv)
+                TextButton(child: Text("Download Relatório Geral"), onPressed: () => _downloadGeneral(context))
+              ],
+            )),
+        Container(
+            margin: EdgeInsetsDirectional.only(end: 10, top: 5, bottom: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(child: Text("Download Relatório Específico"), onPressed: () => _downloadEspec(context))
               ],
             ))
       ]);

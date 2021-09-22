@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'dart:typed_data';
 
@@ -23,6 +24,12 @@ class FileService {
 
     return File(filePath).writeAsBytes(
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+  }
+
+  Future<void> writeFileBase64(String base64, String name) async {
+    Base64Decoder base = Base64Decoder();
+    Uint8List data = base.convert(base64);
+    writeFileByte(data, name);
   }
 
   Future<void> writeFileString(String data, String name) async {

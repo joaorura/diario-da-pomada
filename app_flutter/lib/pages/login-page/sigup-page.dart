@@ -1,6 +1,4 @@
-import 'package:app_flutter/main.dart';
 import 'package:app_flutter/pages/calendar-page/calendar-page.dart';
-import 'package:app_flutter/pages/configuration-page/configuration-page.dart';
 import 'package:app_flutter/pages/default-page/default-page.dart';
 import 'package:app_flutter/pages/login-page/base-page.dart';
 import 'package:app_flutter/pages/login-page/button-camp.dart';

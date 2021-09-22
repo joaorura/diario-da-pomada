@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:app_flutter/main.dart';
 import 'package:app_flutter/models/calendar-model.dart';
-import 'package:app_flutter/models/token-model.dart';
 import 'package:flutter/material.dart';
 
 String tokenDefault;
