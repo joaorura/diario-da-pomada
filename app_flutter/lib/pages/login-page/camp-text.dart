@@ -90,6 +90,7 @@ class _CampText extends State<CampText> {
             border: Border.all(color: Colors.white, width: 1.5),
           ),
           child: TextFormField(
+            key: Key(widget.nameCamp!),
             controller: _controller,
             onSaved: widget.getData,
             inputFormatters: widget.inputs,

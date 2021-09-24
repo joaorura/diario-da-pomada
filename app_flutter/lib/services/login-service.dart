@@ -8,8 +8,20 @@ import 'package:app_flutter/services/storage-service.dart';
 import 'package:dio/dio.dart';
 
 class LoginService extends DioService {
+  LoginModel defaultLogin = LoginModel("test@test.com", "0170", null);
+  bool test = false;
+
+  bool loginTest(LoginModel login) {
+    return defaultLogin.login == login.login &&
+        defaultLogin.password == login.password;
+  }
+
   Future<bool> login(
       LoginModel login, NotificationService notificationService) async {
+    if (test) {
+      return loginTest(login);
+    }
+
     if (tokenUnset) {
       await loadAuthentication();
     }

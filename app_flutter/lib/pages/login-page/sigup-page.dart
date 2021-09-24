@@ -18,9 +18,11 @@ import 'login-page.dart';
 class SignupPage extends StatefulWidget {
   final NotificationService notificationService;
   final SignupModel? previousData;
+  final SignupModel? testData;
   final bool? edit;
 
-  SignupPage(this.notificationService, {Key? key, this.previousData, this.edit})
+  SignupPage(this.notificationService,
+      {Key? key, this.previousData, this.edit, this.testData})
       : super(key: key);
 
   @override
@@ -227,6 +229,7 @@ class _SignupPageState extends State<SignupPage> {
                       backgroundColor: MaterialStateProperty.all(Colors.white)),
                   child: Text(
                     UtilData.obterDataDDMMAAAA(_data!.birthDate!),
+                    key: Key('Data de Nascimento'),
                     style: TextStyle(color: Colors.pink),
                   ),
                 ),
@@ -265,19 +268,28 @@ class _SignupPageState extends State<SignupPage> {
                 }
               },
               dataCamp: _data!.nationalCard,
-            )
+            ),
+            buttons
           ])),
-      buttons
     ]);
   }
 
   @override
   Widget build(BuildContext context) {
     if (_edit!) {
-      SignupService service = new SignupService();
+      Future<SignupModel?> data;
+
+      if (widget.testData == null) {
+        SignupService service = new SignupService();
+        data = service.getUser();
+      } else {
+        data = () async {
+          return widget.testData;
+        }();
+      }
 
       return FutureBuilder(
-          future: service.getUser(),
+          future: data,
           builder: (context, data) {
             if (data.hasData) {
               if (data.data == null) {

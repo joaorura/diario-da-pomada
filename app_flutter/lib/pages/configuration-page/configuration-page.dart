@@ -17,7 +17,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ConfigurationPage extends StatelessWidget {
   final NotificationService notificationService;
-  ConfigurationPage(this.notificationService, {Key? key}) : super(key: key);
+  final TypeUserModel? testData;
+
+  ConfigurationPage(this.notificationService, {Key? key, this.testData})
+      : super(key: key);
 
   Function logoff(BuildContext context) {
     return () {
@@ -176,9 +179,17 @@ class ConfigurationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TypeUserService typeUserService = new TypeUserService();
+    Future<TypeUserModel?> data;
 
-    return FutureBuilder(
-        future: typeUserService.getTypeUser(), builder: buildFuture);
+    if (testData == null) {
+      TypeUserService typeUserService = new TypeUserService();
+      data = typeUserService.getTypeUser();
+    } else {
+      data = () async {
+        return testData;
+      }();
+    }
+
+    return FutureBuilder(future: data, builder: buildFuture);
   }
 }

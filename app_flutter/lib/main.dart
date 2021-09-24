@@ -10,17 +10,21 @@ import 'package:timezone/timezone.dart' as tz;
 
 import 'utils/timezone.dart';
 
-Future<void> _configureLocalTimeZone() async {
+Future<void> configureLocalTimeZone({String? timeZone}) async {
   tz.initializeTimeZones();
-  final String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
-  tz.setLocalLocation(tz.getLocation(timeZoneName));
+
+  if (timeZone == null) {
+    timeZone = await FlutterNativeTimezone.getLocalTimezone();
+  }
+
+  tz.setLocalLocation(tz.getLocation(timeZone));
 }
 
 final TimeZone timeZone = TimeZone();
 
 Future<void> loadConf() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await _configureLocalTimeZone();
+  await configureLocalTimeZone();
 }
 
 Future<void> main() async {

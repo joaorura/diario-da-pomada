@@ -14,6 +14,8 @@ class TypeUserModel {
     }
   }
 
+  TypeUserModel(this.typeUser);
+
   TypeUserModel.fromJson(Map<String, dynamic> json)
       : typeUser = _getEnum(json['role']);
 }

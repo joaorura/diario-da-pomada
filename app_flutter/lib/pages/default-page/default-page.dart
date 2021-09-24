@@ -1,3 +1,5 @@
+import 'package:app_flutter/models/calendar-model.dart';
+import 'package:app_flutter/models/type-user-model.dart';
 import 'package:app_flutter/pages/calendar-page/calendar-page.dart';
 import 'package:app_flutter/pages/configuration-page/configuration-page.dart';
 import 'package:app_flutter/pages/informations-page/informations-page.dart';
@@ -9,8 +11,9 @@ import 'package:flutter/material.dart';
 class DefaultPage extends StatefulWidget {
   final NotificationService notificationService;
   final int? page;
+  final bool? test;
 
-  DefaultPage(this.notificationService, {Key? key, this.page})
+  DefaultPage(this.notificationService, {Key? key, this.page, this.test})
       : super(key: key);
 
   @override
@@ -41,7 +44,12 @@ class _DefaultPage extends State<DefaultPage> {
         break;
       case 1:
         this.setState(() {
-          this.bodyChild = CalendarPage(widget.notificationService);
+          this.bodyChild = CalendarPage(widget.notificationService,
+              testData: widget.test == null
+                  ? null
+                  : (widget.test!
+                      ? CalendarModel(null, null, false, erro: false)
+                      : null));
         });
         break;
       case 2:
@@ -51,7 +59,10 @@ class _DefaultPage extends State<DefaultPage> {
         break;
       case 3:
         this.setState(() {
-          this.bodyChild = ConfigurationPage(widget.notificationService);
+          this.bodyChild = ConfigurationPage(widget.notificationService,
+              testData: widget.test == null
+                  ? null
+                  : (widget.test! ? TypeUserModel(TypeUserEnum.user) : null));
         });
         break;
       default:

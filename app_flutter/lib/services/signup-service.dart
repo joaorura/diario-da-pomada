@@ -19,9 +19,10 @@ class SignupService extends DioService {
       storageService.saveToken(tokenModel.acessToken);
       storageService.reload();
       return true;
-    } on Exception catch (_) {
+    } on Exception catch (erro) {
       storageService.clearAll();
       storageService.reload();
+      print(erro);
       return false;
     }
   }

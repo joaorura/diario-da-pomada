@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app_flutter/pages/calendar-page/daily-page.dart';
 import 'package:app_flutter/pages/calendar-page/weekly-page.dart';
 import 'package:app_flutter/models/calendar-model.dart';
@@ -13,7 +15,9 @@ import 'package:table_calendar/table_calendar.dart';
 class CalendarPage extends StatefulWidget {
   final NotificationService notificationService;
   final bool? answer;
-  CalendarPage(this.notificationService, {Key? key, this.answer})
+  final CalendarModel? testData;
+
+  CalendarPage(this.notificationService, {Key? key, this.answer, this.testData})
       : super(key: key);
 
   @override
@@ -164,8 +168,18 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     CalendarService calendarService = CalendarService();
-    Future<CalendarModel> futureCalendarModel = calendarService.getCalendar(
-        notificationService: widget.notificationService);
+
+    Future<CalendarModel> futureCalendarModel;
+
+    if (widget.testData == null) {
+      futureCalendarModel = calendarService.getCalendar(
+          notificationService: widget.notificationService);
+    } else {
+      futureCalendarModel = () async {
+        return widget.testData!;
+      }();
+    }
+
     return FutureBuilder(
         future: futureCalendarModel,
         initialData: CalendarModel(null, null, false, erro: false),

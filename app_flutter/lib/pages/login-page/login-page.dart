@@ -16,8 +16,9 @@ import 'package:flutter/services.dart';
 class LoginPage extends StatefulWidget {
   final NotificationService notificationService;
   final LoginModel? loginModel;
+  final bool? test;
 
-  LoginPage(this.notificationService, {Key? key, this.loginModel})
+  LoginPage(this.notificationService, {Key? key, this.loginModel, this.test})
       : super(key: key);
 
   @override
@@ -31,9 +32,17 @@ class _LoginPage extends State<LoginPage> {
   void sendForm() async {
     if (_formKey.currentState!.validate()) {
       LoginService loginService = new LoginService();
+
+      bool test = false;
+
+      if (widget.test != null && widget.test!) {
+        test = true;
+        loginService.test = true;
+      }
+
       if (await loginService.login(_loginModel!, widget.notificationService)) {
-        goPageWithoutBack(
-            context, () => DefaultPage(widget.notificationService))();
+        goPageWithoutBack(context,
+            () => DefaultPage(widget.notificationService, test: test))();
       } else {
         showSnackBar(context, "Erro ao realizar login.");
       }

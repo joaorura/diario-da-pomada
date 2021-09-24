@@ -25,6 +25,7 @@ class _ButtonCamp extends State<ButtonCamp> {
       margin: EdgeInsets.only(left: 10, right: 10, top: 20),
       child: MaterialButton(
         color: Colors.white,
+        key: Key(this.theText),
         onPressed: this.onPressed as void Function(),
         child: Text(
           this.theText,
