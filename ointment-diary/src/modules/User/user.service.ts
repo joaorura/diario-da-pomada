@@ -34,13 +34,15 @@ export class UserService {
         });
     }
 
-    findAllForSpecificReports() {
-        return this.userModel
-            .find({ role: 'user' })
-            .select(['fullName', 'healthCard'])
-            .catch((e) => {
-                throw new InternalServerErrorException(e.message);
-            });
+    async findAllForSpecificReports() {
+        return {
+            users: await this.userModel
+                .find({ role: 'user' })
+                .select(['fullName', 'healthCard'])
+                .catch((e) => {
+                    throw new InternalServerErrorException(e.message);
+                }),
+        };
     }
 
     async update(user: User, body: UpdateUser) {

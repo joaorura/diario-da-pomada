@@ -14,7 +14,7 @@ export class ReportsController {
         return await this.reportsService.getGeneralReport();
     }
 
-    @Post('specific')
+    @Get('specific')
     @Role(RoleEnum.Admin)
     async createSpecificReport(@Body() body: GetSpecificReport) {
         return await this.reportsService.getSpecificReport(body.healthCard);
