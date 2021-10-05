@@ -1,6 +1,7 @@
 import 'package:app_flutter/models/file-model.dart';
 import 'package:app_flutter/models/signup-model.dart';
 import 'package:app_flutter/models/type-user-model.dart';
+import 'package:app_flutter/pages/configuration-page/specific_report.dart';
 import 'package:app_flutter/pages/login-page/login-page.dart';
 import 'package:app_flutter/pages/login-page/sigup-page.dart';
 import 'package:app_flutter/pages/notifications-page/notifications-page.dart';
@@ -42,33 +43,6 @@ class ConfigurationPage extends StatelessWidget {
     showSnackBar(context, "Download do relátorio geral feito.");
   }
 
-  Future<void> _downloadEspec(BuildContext context) async {
-    SignupService userService = SignupService();
-    SignupModel? userData = await userService.getUser();
-
-    if (userData == null) {
-      showSnackBar(context,
-          "Falha a acessar os dados do usuário em download de relátorio específico.");
-      return;
-    }
-
-    String? healthCard = userData.heathCard;
-    ReportService reportService = new ReportService();
-    FileModel? fileModel = await reportService.getEspecificReport(healthCard);
-
-    if (fileModel == null) {
-      showSnackBar(context,
-          "Falha a acessar os dados do relatório em download de relátorio específico.");
-      return;
-    }
-
-    FileService fileService = new FileService();
-    await fileService.writeFileBase64(
-        fileModel.fileBase64, "dp-r-espec-${DateTime.now().toString()}.xlsx");
-
-    showSnackBar(context, "Download do relátorio específico feito.");
-  }
-
   Widget buildFuture(BuildContext context, AsyncSnapshot<TypeUserModel?> data) {
     Widget downloadCsv;
 
@@ -107,8 +81,10 @@ class ConfigurationPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                    child: Text("Download Relatório Específico"),
-                    onPressed: () => _downloadEspec(context))
+                    child: Text("Relatório Específico"),
+                    onPressed:
+                        goPageWithBack(context, () => SpecificReportPage())
+                            as void Function()?)
               ],
             ))
       ]);

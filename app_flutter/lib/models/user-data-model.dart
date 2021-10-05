@@ -5,7 +5,7 @@ class DataModel {
   DataModel(this.name, this.healthCard);
 
   DataModel.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
+      : name = json['fullName'],
         healthCard = json['healthCard'];
 }
 

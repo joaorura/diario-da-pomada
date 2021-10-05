@@ -9,7 +9,7 @@ class UserDataService extends DioService {
     }
 
     try {
-      Response response = await dio!.get("/users");
+      Response response = await dio!.get("/user/specific-reports");
       UserDataModel result = UserDataModel.fromJson(response.data);
 
       return result;
