@@ -1,6 +1,9 @@
 class LoginModel {
-  final String login;
-  final String password;
+  String? login;
+  String? password;
+  bool? obscure;
 
-  LoginModel(this.login, this.password);
+  LoginModel(this.login, this.password, this.obscure);
+
+  Map<String, dynamic> toJson() => {'username': login, "password": password};
 }

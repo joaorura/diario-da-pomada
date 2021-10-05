@@ -4,7 +4,7 @@ import { FixedLengthMessage } from '../messages';
 export function FixedLength(fixedLength: number, validationOptions?: ValidationOptions) {
     return function (object: any, propertyName: string) {
         registerDecorator({
-            name: 'isLongerThan',
+            name: 'FixedLength',
             constraints: [fixedLength],
             target: object.constructor,
             propertyName: propertyName,

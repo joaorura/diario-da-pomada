@@ -1,9 +1,32 @@
+import 'package:app_flutter/services/storage-service.dart';
 import 'package:dio/dio.dart';
 
 class DioService {
-  final Dio dio = Dio();
+  static const String baseUrl = "http://10.0.2.2:3000";
+  String? _token;
+  bool tokenUnset = true;
+  Dio? dio;
 
-  void setToken(String token) {
-    dio.options.headers['authorization'] = token;
+  DioService({String? token}) {
+    dio = new Dio(new BaseOptions(baseUrl: baseUrl, connectTimeout: 5000));
+    _token = token;
+  }
+
+  void setToken(String? token) {
+    tokenUnset = false;
+    dio!.options.headers['Authorization'] = "Bearer $token";
+  }
+
+  Future<void> loadAuthentication() async {
+    if (_token == null) {
+      StorageService storageService = new StorageService();
+      _token = await storageService.getToken();
+
+      if (_token != null) {
+        setToken(_token);
+      }
+    } else {
+      setToken(_token);
+    }
   }
 }

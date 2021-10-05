@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Request } from '@nestjs/common';
+import { Body, Controller, Post, Request } from '@nestjs/common';
 import { CalendaryService } from './calendary.service';
 import { GetCalendary } from './calendary.dto';
 
@@ -6,8 +6,8 @@ import { GetCalendary } from './calendary.dto';
 export class CalendaryController {
     constructor(private readonly calendaryService: CalendaryService) {}
 
-    @Get()
+    @Post()
     async findByUserId(@Request() request, @Body() body: GetCalendary) {
-        return this.calendaryService.findByUserId(request.user._id, body);
+        return await this.calendaryService.findByUserId(request.user._id, body);
     }
 }

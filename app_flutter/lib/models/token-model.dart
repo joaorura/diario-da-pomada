@@ -1,5 +1,10 @@
 class TokenModel {
-  final String token;
+  final String acessToken;
 
-  TokenModel(this.token);
+  TokenModel(this.acessToken);
+
+  TokenModel.fromJson(Map<String, dynamic> json)
+      : acessToken = json['access_token'];
+
+  Map<String, dynamic> toJson() => {'access_token': acessToken};
 }
