@@ -1,6 +1,8 @@
 import { Controller, Body, Patch, Delete, Get, Request } from '@nestjs/common';
+import { RoleEnum } from '../Auth/role-auth.guard';
 import { UserService } from './user.service';
 import { UpdateUser } from './user.dto';
+import { Role } from 'src/app.metadata';
 
 @Controller('user')
 export class UserController {
@@ -14,6 +16,12 @@ export class UserController {
     @Get('role')
     async findRole(@Request() request) {
         return { role: request.user.role };
+    }
+
+    @Get('specific-reports')
+    @Role(RoleEnum.Admin)
+    async findAllForSpecificReports() {
+        return await this.userService.findAllForSpecificReports();
     }
 
     @Patch()

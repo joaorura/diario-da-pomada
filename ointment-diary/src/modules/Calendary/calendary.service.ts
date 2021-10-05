@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { Calendary, CalendaryDocument } from './calendary.entity';
 import { CreateCalendary, GetCalendary } from './calendary.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -49,13 +49,18 @@ export class CalendaryService {
             throw new InternalServerErrorException(e.message);
         });
 
-        finded.weekly.forEach((weeklyDate, index) => {
-            if (moment(date).isSame(weeklyDate)) {
-                finded.weekly.splice(index, 1);
-            }
-        });
+        if (finded) {
+            finded.weekly.forEach((weeklyDate, index) => {
+                if (moment(date).isSame(weeklyDate)) {
+                    finded.weekly.splice(index, 1);
+                }
+            });
 
-        finded.save();
+            finded.save();
+        } else {
+            const message = 'Esse usuário não tem um calendário semanal.';
+            throw new NotFoundException({ message: 'Not Found', statusCode: 404 }, message);
+        }
     }
 
     async findAndRemoveDailyDateById(userId, date: Date) {
@@ -63,13 +68,18 @@ export class CalendaryService {
             throw new InternalServerErrorException(e.message);
         });
 
-        finded.daily.forEach((dailyDate, index) => {
-            if (moment(date).isSame(dailyDate)) {
-                finded.daily.splice(index, 1);
-            }
-        });
+        if (finded) {
+            finded.daily.forEach((dailyDate, index) => {
+                if (moment(date).isSame(dailyDate)) {
+                    finded.daily.splice(index, 1);
+                }
+            });
 
-        finded.save();
+            finded.save();
+        } else {
+            const message = 'Esse usuário não tem um calendário diário.';
+            throw new NotFoundException({ message: 'Not Found', statusCode: 404 }, message);
+        }
     }
 
     private createCalendary(currentDate: Date) {

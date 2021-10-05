@@ -28,10 +28,19 @@ export class UserService {
         return this.findByUsername(user.email);
     }
 
-    findAllUsersForReports() {
+    findAllForReports() {
         return this.userModel.find({ role: 'user' }).catch((e) => {
             throw new InternalServerErrorException(e.message);
         });
+    }
+
+    findAllForSpecificReports() {
+        return this.userModel
+            .find({ role: 'user' })
+            .select(['fullName', 'healthCard'])
+            .catch((e) => {
+                throw new InternalServerErrorException(e.message);
+            });
     }
 
     async update(user: User, body: UpdateUser) {

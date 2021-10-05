@@ -15,7 +15,7 @@ export class ReportsService {
     constructor(private readonly questionsService: QuestionsService, private readonly userService: UserService) {}
     async getGeneralReport() {
         try {
-            const users = await this.userService.findAllUsersForReports();
+            const users = await this.userService.findAllForReports();
             const workbook = await XlsxPopulate.fromFileAsync(`${reportsPath}/general-model.xlsx`);
 
             const dailyCalendar = [];

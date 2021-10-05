@@ -1,5 +1,3 @@
-.env.development
-
 # compiled output
 /dist
 /node_modules
@@ -36,6 +34,7 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 .env
+yarn.lock
 public.pem
 private.pem
 .env.development
