@@ -34,7 +34,7 @@ class Event {
 
 class _CalendarPageState extends State<CalendarPage> {
   DateTime _selectedDay = DateTime.now();
-  bool answer = false;
+  bool answer = true;
 
   _CalendarPageState(bool? answerRec) {
     if (answerRec != null) {

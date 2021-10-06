@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:load/load.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:awesome_select/awesome_select.dart';
+// ignore: implementation_imports
 import 'package:awesome_select/src/model/chosen.dart';
 
 class SpecificReportPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class SpecificReportPage extends StatefulWidget {
 }
 
 class _SpecificReportPage extends State<SpecificReportPage> {
-  String? _selectedHealthCard;
+  String? _selectedHealthCard = '';
 
   List<S2Choice<String>>? options;
 
@@ -33,7 +34,7 @@ class _SpecificReportPage extends State<SpecificReportPage> {
 
     FileService fileService = new FileService();
     await fileService.writeFileBase64(fileModel.fileBase64,
-        "dp-r-espec-$_selectedHealthCard-${DateTime.now().toString()}.xlsx");
+        "dp-r-espec-$_selectedHealthCard-${DateTime.now().toString().replaceAll(':', '-')}.xlsx");
 
     showSnackBar(context, "Download do relátorio específico feito.");
   }

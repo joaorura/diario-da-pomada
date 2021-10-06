@@ -2,7 +2,7 @@ import 'package:app_flutter/services/storage-service.dart';
 import 'package:dio/dio.dart';
 
 class DioService {
-  static const String baseUrl = "http://10.0.2.2:3000";
+  static const String baseUrl = "https://gynecology.herokuapp.com/";
   String? _token;
   bool tokenUnset = true;
   Dio? dio;

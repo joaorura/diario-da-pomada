@@ -1,5 +1,4 @@
 import 'package:app_flutter/models/file-model.dart';
-import 'package:app_flutter/models/signup-model.dart';
 import 'package:app_flutter/models/type-user-model.dart';
 import 'package:app_flutter/pages/configuration-page/specific_report.dart';
 import 'package:app_flutter/pages/login-page/login-page.dart';
@@ -9,7 +8,6 @@ import 'package:app_flutter/services/report-service.dart';
 import 'package:app_flutter/services/file-service.dart';
 import 'package:app_flutter/services/login-service.dart';
 import 'package:app_flutter/services/notification-service.dart';
-import 'package:app_flutter/services/signup-service.dart';
 import 'package:app_flutter/services/type-user-service.dart';
 import 'package:app_flutter/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,7 +36,7 @@ class ConfigurationPage extends StatelessWidget {
 
     FileService fileService = new FileService();
     await fileService.writeFileBase64(fileModel!.fileBase64,
-        "dp-r-general-${DateTime.now().toString()}.xlsx");
+        "dp-r-general-${DateTime.now().toString().replaceAll(':', '-')}.xlsx");
 
     showSnackBar(context, "Download do relátorio geral feito.");
   }
