@@ -1,0 +1,5 @@
+:directories:
+  - .git
+:files:
+  - .code2pdf
+  - .DS_Store

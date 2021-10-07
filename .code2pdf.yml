@@ -1,6 +1,0 @@
-:directories:
-  - ointment-diary/src/assets
-  - .git
-:files:
-  - .code2pdf.yml
-  - .DS_Store
