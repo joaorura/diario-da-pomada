@@ -1,17 +1,6 @@
 :directories:
-  - ointment-diary/node_modules
   - ointment-diary/src/assets
-  - ointment-diary/dist
-  # - app_flutter/.vscode
   - .git
 :files:
-  - ointment-diary/package-lock.json
-  - ointment-diary/.env.development
-  - ointment-diary/README.md
-  - ointment-diary/yarn.lock
-  - ointment-diary/.env
   - .code2pdf.yml
-  - .gitignore
   - .DS_Store
-  - README.md
-  - LICENSE
